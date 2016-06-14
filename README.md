@@ -1,4 +1,8 @@
 # ST_API
-Service Trade integration API
+Service Trade API Integration
 
-Documentation is under construction!
+Currently the API consists of Data Objects which can be used to handle Request and Responses from the ServiceTrade API.
+
+Class Level Documentation is currently being generated.
+
+The purpose of this application is to provide a framework to interact with ServiceTrade.
