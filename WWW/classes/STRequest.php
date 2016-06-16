@@ -65,21 +65,18 @@ class STRequest
 	{
 		// Local Variables
 		$JSON_RESPONSE = null;
+		$FILE_POINTER = null;
 
-		if ( !is_null($this->REQUEST_PARAMS) )
+		if ( $this->REQUEST_METHOD == 'GET' )
 		{
-			if ( $this->REQUEST_METHOD == 'GET' )
-			{
-				$FILE_POINTER = fopen( $REQUEST_URI.'?'.$this->REQUEST_PARAMS, 'r', false, $this->REQUEST_CONTEXT);
-			}
+			$FILE_POINTER = fopen( $REQUEST_URI.'?'.$this->REQUEST_PARAMS, 'r', false, $this->REQUEST_CONTEXT);
 		} else {
 			$FILE_POINTER = fopen( $REQUEST_URI, 'r', false, $this->REQUEST_CONTEXT);
 		}
 
 		if ( !$FILE_POINTER )
 		{
-			echo 'Failed to open file: '. $REQUEST_URI . '\n';
-			log('Failed to open file: '. $REQUEST_URI . '\n');
+			echo 'Failed to open file: '. $REQUEST_URI;
 			return 'Failed to open file';
 		} else {
 
@@ -91,7 +88,6 @@ class STRequest
 		if ( is_null($JSON_RESPONSE) )
 		{ // Testing if we received a JSON_RESPONSE.
 			echo 'Failed to Receive Response: '. $REQUEST_URI . '\n';
-			log('Failed to Receive Response: '. $REQUEST_URI . '\n');
 			return 'Failed to Receive Response: '. $REQUEST_URI . '\n';
 		}
 		
