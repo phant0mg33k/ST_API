@@ -55,6 +55,12 @@ class STRequest
 					'header' => $this->REQUEST_HEADERS
 					)
 				);
+			} elseif ( $this->REQUEST_METHOD == 'DELETE' ) {
+				$this->CONTEXT_OPTIONS = array(
+				'http' => array(
+					'method' => $this->REQUEST_METHOD,
+					)
+				);
 			}
 
 			$this->REQUEST_CONTEXT = stream_context_create($this->CONTEXT_OPTIONS);

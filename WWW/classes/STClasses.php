@@ -69,7 +69,15 @@ class Account extends STBaseClass
 * (string) URI 	: Resource Identifier of the Appointment
 */
 class Appointment extends STURIBaseClass
-{ }
+{
+	public function __toString()
+	{
+		$RETURN_VALUE = "\n";
+		$RETURN_VALUE .= 'Name: ' . $this->name . "\n";
+		$RETURN_VALUE .= 'ID: ' . $this->id . "\n";
+		return $RETURN_VALUE;
+	}
+}
 
 /**
 * Asset class
@@ -129,28 +137,6 @@ class Activity extends STBaseClass
 	{
 		parent::__construct( $id, $name );
 		$this->description = $description;
-	}
-}
-
-/**
-* Job
-* (int) ID 			: ID of the Job
-* (string) Name 	: Name of the Job
-* (string) URI 		: Resource Identifier of the Job
-* (int) Number 		: External job identifier
-* (string) Type 	: One of:
-			unknown, repair, construction, upgrade, service_call, urgent_service_call, priority_service_call, emergency_service_call, cleaning, inspection, survey, preventative_maintenance, delivery, sales, installation
-*/
-class Job extends STURIBaseClass
-{
-	public $number;
-	public $type;
-
-	public function __construct( $id, $name, $uri, $number, $type )
-	{
-		parent::__construct( $id, $name, $uri );
-		$this->number = $number;
-		$this->type = $type;
 	}
 }
 
@@ -484,30 +470,4 @@ class Webhook
 
 	public function __construct() {}
 }
-
-
-/*****************************************
- *********  Undocumented Classes *********
- *****************************************/
-class AuthUser
-{
-	public $id;
-	public $uri;
-	public $name;
-	public $status;
-	public $firstName;
-	public $lastName;
-	public $username;
-	public $email;
-	public $phone;
-	public $isTech;
-
-	public function __construct( $user )
-	{
-		$this->id 		= $user->id;
-		$this->uri 		= $user->uri;
-		$this->name 	= $user->name;
-	}
-}
-
 ?>
