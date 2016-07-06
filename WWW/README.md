@@ -5,10 +5,10 @@
 This folder holds the hostable WEB content.
 
 The default website folders related folders are here and can be, for the most part, ignored.
-1. css
-2. fonts
-3. images
-4. js
++css
++fonts
++images
++js
 
 There is a templating system employed to help in the construction of pages.
 These template partials are inside of the **partials** folder.
