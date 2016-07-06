@@ -1,4 +1,7 @@
-# ST_API
-This is a personal project. It's available on Github for now.
+#ST_API
 
-To use this... Simple drop it in the root of a web server.
+This application is in Pre-Alpha.
+
+The purpose of this application is to integrate with ServiceTrade and provide technicians in the field a quick way to update the properties on an asset.
+
+The main focus is currently to replicate the functionality of a PDF checklist which will synchronize with ServiceTrade.

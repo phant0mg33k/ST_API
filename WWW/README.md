@@ -1,5 +1,16 @@
 #ST_API
 
-This application is in pre-alpha.
+###This application is in Pre-Alpha.
 
-Documentation is very sparse and is currently being written.
+This folder holds the hostable WEB content.
+
+The default website folders related folders are here and can be, for the most part, ignored.
+1. css
+2. fonts
+3. images
+4. js
+
+There is a templating system employed to help in the construction of pages.
+These template partials are inside of the **partials** folder.
+
+Inside of the **php** folder is where the ST_API library is. More documentation is available there.
