@@ -15,11 +15,7 @@
 
 require_once './php/ST_API.php'; // Require our library
 
-if ( // Make sure we are logged in.
-	!isset( $_SESSION['API_CURRENT_AUTH'] ) || 
-	!isset( $_SESSION['API_CURRENT_AUTH_TOKEN'] ) ||
-	!$_SESSION['API_CURRENT_AUTH'] 
-	) { header("location:/login.php"); exit; }
+SECURITY_ENSURE_AUTHENTICATED();
 
 // Page Display Variables.
 $PAGE['TITLE'] = 'Home Page';

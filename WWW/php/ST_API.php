@@ -7,6 +7,8 @@ define('__T_ROOT__', dirname(dirname(__FILE__)).'/partials/');
 
 // API Variables - Contains entries for $GLOBALS
 require_once __ROOT__.'/APIVARS.php';
+// API Functions - Contains helper functions to reduce most pages length. ( Aux PHP Functions )
+require_once __ROOT__.'/funcs.php';
 
 
 /* Data Objects */
@@ -37,6 +39,8 @@ require_once __ROOT__.'/executors/Appointments.php';
 // Asset Handler Class
 require_once __ROOT__.'/executors/Assets.php';
 
+// Timeclock Handler Class
+require_once __ROOT__.'/executors/TimeClock.php';
 
 /* Control Flow : Take any necessary actions before completing the loading of the library. */
 // Start the session
