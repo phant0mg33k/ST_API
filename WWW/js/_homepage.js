@@ -60,7 +60,7 @@ function buildAssetsCB( APPT )
 			} else {
 				var this_asset = $("<div></div>").addClass('well asset-list');
 
-					this_asset.append( $("<p></p>").text( item['asset']['name'] ) );
+					//this_asset.append( $("<p></p>").text( item['asset']['name'] ) );
 					this_asset.append( $("<p></p>").text( item['asset']['id'] ) );
 					this_asset.append( $("<p></p>").text( item['asset']['uri'] ) );
 

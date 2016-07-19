@@ -64,12 +64,20 @@ function startup()
 			var content_div = $('#content');
 
 			data = $.parseJSON(data);
-			$.each( data, function( number, val ) {
-				content_div.append(
-					buildAppointmentCB( number, val )
-				);
-				appointments.push(val);
-			});
+
+			// Check that the Appointments endpoint did not return an error JSON object.
+			if ( data['error'] )
+			{
+				content_div.append( $("<h3></h3>").addClass("text-center").text( data['error'] ) );
+			} else {
+
+				$.each( data, function( number, val ) {
+					content_div.append(
+						buildAppointmentCB( number, val )
+					);
+					appointments.push(val);
+				});
+			}
 		}
 	});
 }
@@ -81,8 +89,7 @@ var appointments = [];
 $(document).on({
     ajaxStart: function() { body.addClass("loading"); },
 	ajaxStop: function() { body.removeClass("loading"); },
-	ready: function() { 
-		body.addClass("loading");
+	ready: function() {
 		startup();
 	}
 });

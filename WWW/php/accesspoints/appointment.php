@@ -1,48 +1,63 @@
 <?php
+/* ServiceTrade API
+ *
+ * Appointment endpoint remapping.
+ *
+ *	Purpose: To provide a quick and easy URL for the homepage to hit and retrieve a list of Appointments.
+ *
+ *
+ */
 
-if ( session_status() == PHP_SESSION_NONE )
-	session_start();
+// Start the session.
+if ( session_status() == PHP_SESSION_NONE ) { session_start(); }
 
+// Require the library.
 require_once '../ST_API.php';
+
+// Create the Appointments object 
 $Appointments = new Appointments();
-$Appointments->get_all_scheduled_by_tech_id( $_SESSION['API_USER_ID'] );
-//$Appointments->get_all_by_tech_id( $_SESSION['API_USER_ID'] );
+// Currently we are asking for all of the schedule appointments by tech ID.
+// We can also ask for All appointments for the technician
+// And we can ask for only the appointments which the technician is clocked into.
 
-$APPOINTMENTS = $Appointments->RESPONSE;
-$APPOINTMENTS = json_decode($APPOINTMENTS, true);
-$APPOINTMENTS = $APPOINTMENTS['data']['appointments'];
+//$Appointments->get_all();
+//$Appointments->get_all_scheduled_by_tech_id();
+//$Appointments->get_all_by_tech_id();
+$Appointments->get_all_clocked_in_by_tech_id();
 
-/* BEGIN EXPERIMENTAL ASSET LISTING LOOPS */
-foreach ( range(0, ( count($APPOINTMENTS) - 1 ) ) as $IDX )
+$APPOINTMENTS = json_decode( $Appointments->RESPONSE , true);
+
+echo "<pre>";
+var_dump($APPOINTMENTS);
+echo "</pre>";
+
+if ( $APPOINTMENTS['data'] )
 {
-	foreach ( range( 0, ( count($APPOINTMENTS[$IDX]['serviceRequests']) - 1 ) ) as $JDX )
-	{
-		if ( empty($APPOINTMENTS[$IDX]['serviceRequests']) ) // serviceRequests is Empty so let's skip this one.
-			continue;
 
-		if ( preg_match( "/Location/", $APPOINTMENTS[$IDX]['serviceRequests'][$JDX]['asset']['name']) )
-		{
-			$Assets = new Assets();
-			$Assets->get_all_by_location_id( $APPOINTMENTS[$IDX]['location']['id'] );
-			
-			$APPOINTMENTS[$IDX]['serviceRequests'][$JDX]['ASSETS'] = array();
+} elseif ( isset( $APPOINTMENTS['data']['appointments'] ) && count($APPOINTMENTS['data']['appointments']) > 0 ) {
 
-			foreach( $Assets->RESPONSE['assets'] as $ASSET )
-			{
+$APT_LIST = array();
 
-				array_push( $APPOINTMENTS[$IDX]['serviceRequests'][$JDX]['ASSETS'] , $ASSET);
-			}
-		} else {
-			$Assets = new Assets();
-			$Assets->get_by_id( $APPOINTMENTS[$IDX]['serviceRequests'][$JDX]['asset']['id'] );
-			$ASSET = $Assets->RESPONSE;
-			$APPOINTMENTS[$IDX]['serviceRequests'][$JDX]['asset'] = $ASSET;
-		}
-	}
+foreach( $APPOINTMENTS['data']['appointments'] as $APPOINTMENT )
+{
+	$apt = array( 
+		'id' => $APPOINTMENT['id'],
+		'status' => $APPOINTMENT['status'],
+		'windowStart' => $APPOINTMENT['windowStart'],
+		'windowEnd' => $APPOINTMENT['windowEnd'],
+		'serviceRequests' => $APPOINTMENT['serviceRequests']
+	);
+	array_push($APT_LIST, $apt);
 }
 
-$APPOINTMENTS = json_encode($APPOINTMENTS);
+echo json_encode($APPOINTMENTS['data']['appointments']);
 
-echo $APPOINTMENTS;
+echo json_encode($APT_LIST);
+
+} else {
+
+echo json_encode(array("error"=>"No appointments to display."));
+
+}
 
 ?>

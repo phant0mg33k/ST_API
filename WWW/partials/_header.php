@@ -23,7 +23,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<!--/ Required For Bootstrap -->
-	<title><?php echo ( isset($PAGE['TITLE']) ) ? htmlentities($PAGE['TITLE']): 'Template Header'; ?></title>
+	<title><?php echo ( isset($PAGE['TITLE']) ) ? 'Asset Inspector :: ' . htmlentities($PAGE['TITLE']): 'Asset Inspector :: Template Header'; ?></title>
+
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 
 <?php
 /* Stylesheet inclusion.
