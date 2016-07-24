@@ -27,7 +27,7 @@ function SECURITY_ENSURE_AUTHENTICATED()
 		 !isset( $_SESSION['API_CURRENT_AUTH_TOKEN'] ) ||
 		 !$_SESSION['API_CURRENT_AUTH'] )
 	{
-		header("location:/login.php"); // Force redirect to login page.
+		header("location:./login.php"); // Force redirect to login page.
 		exit; // Discontinue execution.
 	}
 }

@@ -20,7 +20,16 @@
  	this_button.addClass('btn-success');
  	this_button.removeClass('btn-danger');
  	this_button.text('Inspected...');
- 	alert( "Asset ID: " + ASSET_ID );
+
+ 	var REQ_URL = "/TEST.php?id="+ASSET_ID+"";
+
+
+ 	$.ajax({
+ 		url: REQ_URL,
+ 		success: function( data, textStatus, jqXHR ){
+ 			alert(data);
+ 		}
+ 	});
  }
 
 /* This function takes the Appointment Object and will construct a content block out of the assets it contains.
@@ -63,6 +72,7 @@ function buildAssetsCB( APPT )
 					//this_asset.append( $("<p></p>").text( item['asset']['name'] ) );
 					this_asset.append( $("<p></p>").text( item['asset']['id'] ) );
 					this_asset.append( $("<p></p>").text( item['asset']['uri'] ) );
+					this_asset.append( $("<p></p>").text( item['asset']['name'] ) );
 
 				return_value.append(this_asset);
 			}

@@ -17,6 +17,7 @@ require_once __ROOT__.'/dataobjects/HttpRequest.php';
 // Extend HttpRequest.
 require_once __ROOT__.'/dataobjects/GetRequest.php';
 require_once __ROOT__.'/dataobjects/PostRequest.php';
+require_once __ROOT__.'/dataobjects/PutRequest.php';
 require_once __ROOT__.'/dataobjects/DeleteRequest.php';
 
 //Embedded Objects returned in responses
