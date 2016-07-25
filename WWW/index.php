@@ -20,7 +20,7 @@ SECURITY_ENSURE_AUTHENTICATED();
 // Page Display Variables.
 $PAGE['TITLE'] = 'Home Page';
 $PAGE['CSS'] = array('bootstrap', 'homepage');
-$PAGE['JS'] = array('jquery', 'bootstrap', '_homepage', 'homepage');
+$PAGE['JS'] = array('jquery', 'bootstrap', 'homepage', 'jquery.searchable-1.0.0.min');
 
 require_once './partials/_header.php'; // Require the _header partial.
 
@@ -28,16 +28,14 @@ require_once './partials/_navbar.php'; // Require the _navbar partial.
 
 ?>
 
-<div class="viewbox">
-	<div class="leftpane">
-		<div class="container" id="content"></div><!--/#content -->
-	</div><!--/.leftpane -->
-	<div class="rightpane">
-		<div class="container" id="appointment_box">
-			<div id="asset_list"></div>
-		</div><!--/#appointment_box -->
-	</div><!--/.rightpane -->
-</div><!--/.viewbox -->
+<div class="container">
+	<div class="well" id="search-box">
+		<input type="search" id="searchBox" value="" class="form-control text-center"
+			placeholder="Filter by any property">
+	</div><!--/#search-box-->
+</div><!--/.container-->
+
+<div class="container" id="content"></div><!--/#content-->
 
 <div class="modal" id="loading"><p class="loading-message">Loading... Please Wait.</p></div><!--/#loading -->
 

@@ -21,6 +21,9 @@ class Assets
 		}
 	}
 
+	/* Start Accessor
+	*
+	*/
 	public function get_by_id( $ID, $STATUS='active' )
 	{
 		$REQUEST = new GetRequest( "/asset/$ID" );
@@ -40,25 +43,41 @@ class Assets
 		return $this->save_response( $RESPONSE );
 	}
 
-
-	public function mark_asset_inspected( $ASSET_ID )
+	/*	Start private mutator code
+	*		Used by public mutators
+	*/
+	private function mark_asset( $ASSET_ID, $REQUEST_PARAMS )
 	{
 		$Assets = new Assets();
-		$REQUEST_PARAMS = json_encode( array('properties' => array('last_insp_date' => time())) );
 		$PutRequest = new PutRequest( '/asset/'.$ASSET_ID, $REQUEST_PARAMS );
 		$RESPONSE_HEADER = $PutRequest->get_RESPONSE_HEADER();
 
 		if ( preg_match( "/200/", $RESPONSE_HEADER[0] ) )
 		{
-			// success
 			return true;
-		} else {
-			// failed
-			//echo $RESPONSE_HEADER[0];
-			return false;
 		}
+		return false;
 	}
 
-
+	/*	Start public mutator code
+	*		Provide very specific mutations to the properties of the asset.
+	*			Currently you can "mark_asset_inspected" with the asset ID which will update the "last_insp_date".
+	*			If you mark_asset_6_year_tested
+	*/
+	public function mark_asset_inspected( $ASSET_ID )
+	{
+		$REQUEST_PARAMS = json_encode( array("properties"=>array("last_insp_date"=>time())) );
+		return $this->mark_asset( $ASSET_ID, $REQUEST_PARAMS );
+	}
+	public function mark_asset_6_year_tested( $ASSET_ID )
+	{
+		$REQUEST_PARAMS = json_encode( array("properties"=>array("last_insp_date"=>time(),"last_6_year_test_date"=>time())) );
+		return $this->mark_asset( $ASSET_ID, $REQUEST_PARAMS );
+	}
+	public function mark_asset_12_year_tested( $ASSET_ID )
+	{
+		$REQUEST_PARAMS = json_encode( array("properties"=>array("last_insp_date"=>time(),"last_6_year_test_date"=>time(),"last_12_year_test_date"=>time())) );
+		return $this->mark_asset( $ASSET_ID, $REQUEST_PARAMS );
+	}
 }
 ?>
