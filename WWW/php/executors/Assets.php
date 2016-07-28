@@ -36,7 +36,7 @@ class Assets
 		$RESPONSE = $REQUEST->get_RESPONSE();
 		return $this->save_response( $RESPONSE );
 	}
-	public function get_all_by_location_id( $LOCATION_ID, $STATUS='active' )
+	public function get_all_by_location_id( $LOCATION_ID, $STATUS='active,inactive' )
 	{
 		$REQUEST = new GetRequest( '/asset', array( 'locationId' => $LOCATION_ID, 'status' => $STATUS , 'type' => 'extinguisher' ) );
 		$RESPONSE = $REQUEST->get_RESPONSE();
@@ -62,22 +62,23 @@ class Assets
 	/*	Start public mutator code
 	*		Provide very specific mutations to the properties of the asset.
 	*			Currently you can "mark_asset_inspected" with the asset ID which will update the "last_insp_date".
-	*			If you mark_asset_6_year_tested
 	*/
 	public function mark_asset_inspected( $ASSET_ID )
 	{
 		$REQUEST_PARAMS = json_encode( array("properties"=>array("last_insp_date"=>time())) );
 		return $this->mark_asset( $ASSET_ID, $REQUEST_PARAMS );
 	}
-	public function mark_asset_6_year_tested( $ASSET_ID )
+
+	public function mark_asset_inactive( $ASSET_ID )
 	{
-		$REQUEST_PARAMS = json_encode( array("properties"=>array("last_insp_date"=>time(),"last_6_year_test_date"=>time())) );
+		$REQUEST_PARAMS = json_encode( array( "status" => "inactive" ) );
 		return $this->mark_asset( $ASSET_ID, $REQUEST_PARAMS );
 	}
-	public function mark_asset_12_year_tested( $ASSET_ID )
+
+	public function mark_asset_active( $ASSET_ID )
 	{
-		$REQUEST_PARAMS = json_encode( array("properties"=>array("last_insp_date"=>time(),"last_6_year_test_date"=>time(),"last_12_year_test_date"=>time())) );
-		return $this->mark_asset( $ASSET_ID, $REQUEST_PARAMS );
+		$REQUEST_PARAMS = json_encode( array( "status" => "active" ) );
+		return $this->mark_asset( $ASSET_ID, $REQUEST_PARAMS );	
 	}
 }
 ?>

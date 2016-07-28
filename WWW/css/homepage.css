@@ -44,10 +44,10 @@ body.loading .modal .loading-message
 }
 body.loading nav.navbar,
 body.loading div#content,
-body.loading div#search-box
+body.loading div#search-box,
+body.has-error div#search-box
 { /*! This is will make the viewbox and the navbar invisible while the loading modal is up. */
 	display: none;
 	visibility: hidden;
 }
 /*! END CSS for Homepage Modal */
-

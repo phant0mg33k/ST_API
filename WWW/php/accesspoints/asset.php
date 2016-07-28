@@ -7,6 +7,7 @@ require_once '../ST_API.php'; // Require ST_API library
 
 $assetId = null;
 $property = null;
+$status = null;
 
 if ( $_SERVER['REQUEST_METHOD'] == "POST" ) {
 // We are trying to make modifications.
@@ -22,10 +23,6 @@ if ( $_SERVER['REQUEST_METHOD'] == "POST" ) {
 
 			if ( $property == "last_insp_date" ) {
 				$didSucceed = $Assets->mark_asset_inspected( $assetId );
-			} elseif ( $property == "last_6_year_test_date" ) {
-				$didSucceed = $Assets->mark_asset_6_year_tested( $assetId );
-			} elseif ( $property == "last_12_year_test_date" ) {
-				$didSucceed = $Assets->mark_asset_12_year_tested( $assetId );
 			} else {
 				echo json_encode( array( 'error' => 'Requested update to property that can not currently be updated.') );
 				exit;
@@ -33,11 +30,35 @@ if ( $_SERVER['REQUEST_METHOD'] == "POST" ) {
 
 			if ( $didSucceed )
 			{
-				echo json_encode( array('alert'=>'Asset was successfully marked as inspected.'."\n".'Updated: '.$property) );
+				echo json_encode( array('alert'=>"Asset was successfully marked as inspected.\nUpdated: $property") );
 				exit;
 			} else {
 				echo json_encode( array('error'=>'Asset was not successfully marked as inspected.') );
 				exit;
+			}
+		} elseif ( isset($status) && !is_null($status) ) {
+			$Assets = new Assets();
+
+			if ( $status == "inactive" )
+			{
+				// mark status inactive
+				$didSucceed = $Assets->mark_asset_inactive( $assetId );
+			} elseif ( $status == "active" ) {
+				// mark status as active... may need to perform some testing here.
+				$didSucceed = $Assets->mark_asset_active( $assetId );
+			} else {
+				// some error man... status was not "inactive | active"
+				echo json_encode( array( 'error' => "Asset status was not updated. Status supplied was not 'active' or 'inactive'.") );
+				exit;
+			}
+
+			if ( $didSucceed )
+			{
+				echo json_encode( array('alert'=>"Asset was successfully marked as $status.") );
+				exit;
+			} else {
+				echo json_encode( array('error'=>"Asset was not successfully marked as $status.") );
+				exit;	
 			}
 		} else {
 			echo json_encode( array( 'error' => 'Property to inspect was not specified.' ) );

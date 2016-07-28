@@ -13,33 +13,68 @@
  *
  ***********/
 
-function display_alert( alertType, alertMsg, dismissable=true)
+function buildAlertCB( alertType, alertMsg, dismissable )
 {
-
-	/* TODO: Display dismissable alert on the top of the page.
-	 * 			alertType should be "Warning, Danger, Success, Info"
-	 *			alertMsg is a string to be placed inside the dismissable alert.
-	 */
-
-	var messageType = "error";
-	if ( alertType == "alert" )
+	var alert_div = $("<div></div>").addClass("alert").attr('role', 'alert').text( alertMsg );
+	if ( alertType == "error" )
 	{
-		messageType = "alert";
+		alert_div.addClass("alert-danger").prepend( $("<strong></strong>").text( "Error: ") );
+	} else if ( alertType == "success" ) {
+		alert_div.addClass("alert-success").prepend( $("<strong></strong>").text( "Success: ") );
 	}
 
-	if ( dismissable == true )
+	if ( dismissable )
 	{
-
-	} else {
-		$("<div></div>").addClass("alert alert-danger").attr('role', 'alert').text( alertMsg ).prepend( $("<strong></strong>").text( messageType+": ") )
+		alert_div.append( $("<button></button>").addClass("close").attr('type', 'button').attr('data-dismiss', 'alert').attr('aria-label', 'Close').append( $("<span></span>").text("X") ) );
 	}
 
+	return alert_div;
+}
+
+function markAssetInactiveButton( event )
+{
+	var this_button = $(this);
+	var ASSET_ID = this_button.attr('asset-id');
+
+	var params = "assetId="+ASSET_ID+"&status=inactive";	
+	var REQ_URL = "/php/accesspoints/asset.php";
+
+	$.post(REQ_URL, params, function( data, textStatus, jqXHR ) {
+		data = $.parseJSON(data);
+		if ( data['alert'] )
+		{
+			$('#content').prepend( buildAlertCB('success', data['alert'], true ));
+			this_button.addClass('btn-success').removeClass('btn-danger').text('Inactive');
+		} else {
+			alert( data['error'] );
+		}
+	});
+}
+
+function markAssetActiveButton( event )
+{
+	var this_button = $(this);
+	var ASSET_ID = this_button.attr('asset-id');
+
+	var params = "assetId="+ASSET_ID+"&status=active";
+	var REQ_URL = "/php/accesspoints/asset.php";
+
+	$.post(REQ_URL, params, function( data, textStatus, jqXHR ) {
+		data = $.parseJSON(data);
+		if ( data['alert'] )
+		{
+			$('#content').prepend( buildAlertCB('success', data['alert'], true ));
+			this_button.addClass('btn-success').removeClass('btn-danger').text('Active');
+		} else {
+			alert( data['error'] );
+		}
+	});
 }
 
 function inspectAssetButton( event )
 {
-	this_button = $(this);
-	var ASSET_ID = $(this).attr('asset-id');
+	var this_button = $(this);
+	var ASSET_ID = this_button.attr('asset-id');
 
 	// additional params based on the data target of the button that was selected.
 	var DATA_TARGET = $(this).attr('data-target');
@@ -52,7 +87,7 @@ function inspectAssetButton( event )
 		data = $.parseJSON(data);
 		if ( data['alert'] )
 		{
-			alert( data['alert'] );
+			$('#content').prepend( buildAlertCB('success', data['alert'], true ));
 			this_button.addClass('btn-success').removeClass('btn-danger').text('Inspected');
 		} else {
 			alert( data['error'] );
@@ -60,11 +95,8 @@ function inspectAssetButton( event )
 	});
 }
 
-/* This function takes the Appointment Object and will construct a content block out of the assets it contains.
- *  Currently, it can contain a 1 Asset to 1 ServiceRequest ratio or a 1 ServiceRequest to Many "ASSETS".
- *		In the case of a Single Asset, they will be itemized inside of a single Service Request.
- *		When a location is given as the Asset. The LocationID for the appointment will be used to retrieve a list of all assets.
- *		This list of Assets is returned inside the ServiceRequest object as "ASSETS" as opposed to the singular form, "asset".
+/* This function accepts the "Asset" and constructs an "asset-list-item" out of it.
+ *	It will loop through the properties of the asset and include them on the page.
  */
 function buildAssetsCB( asset )
 {
@@ -79,6 +111,7 @@ function buildAssetsCB( asset )
 	// Pull
 	this_asset.append( $("<p></p>").text( "Asset Name: " + asset['name'] ) );
 	this_asset.append( $("<p></p>").text( "Asset ID: " + asset['id'] ) );
+	this_asset.append( $("<p></p>").text( "Asset Status: " + asset['status'] ) );
 
 	for ( var propName in asset['properties'] )
 	{
@@ -92,29 +125,24 @@ function buildAssetsCB( asset )
 			continue;
 		}
 		// append the PropertyName: PropteryValue to the asset-list-item
-		this_asset.append( $("<p></p>").addClass('asset-list-item-property').text( propName+": " + asset['properties'][propName] ) );
+		this_asset.append( $("<p></p>").addClass('asset-list-item-property '+propName+"-class").text( propName+": " + asset['properties'][propName] ) );
 	}
 
-	// Buttons to mark assets inspected.
-	var button_div = $( "<div></div>" ).addClass('btn-group btn-group-justified');
-
-	button_div.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'last_insp_date').attr("asset-id", asset['id']).text("Mark Inspected").on('click', inspectAssetButton)) );
-	button_div.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'last_6_year_test_date').attr("asset-id", asset['id']).text("Perform 6 year test").on('click', inspectAssetButton)) );
-	button_div.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'last_12_year_test_date').attr("asset-id", asset['id']).text("Perform 12 year test").on('click', inspectAssetButton)) );
-
-	this_asset.append( button_div );
+	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'last_insp_date').attr("asset-id", asset['id']).text("Mark Inspected").on('click', inspectAssetButton)) );
+	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'status').attr("asset-id", asset['id']).text("Mark Inactive").on('click', markAssetInactiveButton)) );
+	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'status').attr("asset-id", asset['id']).text("Mark Active").on('click', markAssetActiveButton)) );
 
 	console.log(asset);
 
 	return this_asset;
 }
 
-/* Sends AJAX request to get Appointments JSON. Loops through each appointment and
- * Call the "buildAppointmentCB" to construct the content block.
- * And adds the click handlers to the "Open Appointment Toggle"
- */
-function startup()
-{
+
+/* Begin Control Flow */
+var LIST_OF_ASSETS = [];
+
+$(document).ready(function(){
+
 	$.ajax({
 		type: "GET",
 		url: "/php/accesspoints/appointment.php",
@@ -133,7 +161,8 @@ function startup()
 			// Check that the Appointments endpoint did not return an error JSON object.
 			if ( data['error'] )
 			{
-				content_div.append( $("<div></div>").addClass("alert alert-danger").attr('role', 'alert').text( data['error'] ).prepend( $("<strong></strong>").text("Error: ") ) );
+				content_div.append( buildAlertCB( 'error', data['error'], false ) );
+				$('body').addClass('has-error');
 			} else {
 
 				/*	TODO: Parse JSON from backend and display Appointment Information
@@ -164,12 +193,5 @@ function startup()
 			});
 		}
 	});
-}
 
-/* Begin Control Flow */
-var LIST_OF_ASSETS = [];
-$(document).on({
-	ready: function() {
-		startup();
-	}
 });
