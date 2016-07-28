@@ -15,50 +15,27 @@
 
 require_once './php/ST_API.php'; // Require our library
 
-if ( // Make sure we are logged in.
-	!isset( $_SESSION['API_CURRENT_AUTH'] ) || 
-	!isset( $_SESSION['API_CURRENT_AUTH_TOKEN'] ) ||
-	!$_SESSION['API_CURRENT_AUTH'] 
-	) { header("location:/login.php"); exit; }
+SECURITY_ENSURE_AUTHENTICATED();
 
 // Page Display Variables.
 $PAGE['TITLE'] = 'Home Page';
 $PAGE['CSS'] = array('bootstrap', 'homepage');
-$PAGE['JS'] = array('jquery', 'bootstrap', '_homepage', 'homepage');
+$PAGE['JS'] = array('jquery', 'bootstrap', 'homepage', 'jquery.searchable-1.0.0.min');
 
 require_once './partials/_header.php'; // Require the _header partial.
+
+require_once './partials/_navbar.php'; // Require the _navbar partial.
+
 ?>
 
-<nav class="navbar navbar-default">
-	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#">Asset Inspector</a>
-		</div>
-		<div id="navbar" class="collapse navbar-collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li class="active"><a href="#">Homepage</a></li>
-				<li><a href="/logout.php">Logout</a></li>
-			</ul>
-		</div>
-	</div>
-</nav>
+<div class="container">
+	<div class="well" id="search-box">
+		<input type="search" id="searchBox" value="" class="form-control text-center"
+			placeholder="Filter by any property">
+	</div><!--/#search-box-->
+</div><!--/.container-->
 
-<div class="viewbox">
-	<div class="leftpane">
-		<div class="container" id="content"></div><!--/#content -->
-	</div><!--/.leftpane -->
-	<div class="rightpane">
-		<div class="container" id="appointment_box">
-			<div id="asset_list"></div>
-		</div><!--/#appointment_box -->
-	</div><!--/.rightpane -->
-</div><!--/.viewbox -->
+<div class="container" id="content"></div><!--/#content-->
 
 <div class="modal" id="loading"><p class="loading-message">Loading... Please Wait.</p></div><!--/#loading -->
 
