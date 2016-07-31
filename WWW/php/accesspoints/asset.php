@@ -1,9 +1,16 @@
 <?php
-
-if ( session_status() == PHP_SESSION_NONE )
-	session_start();
+/* ServiceTrade API
+ *
+ * Asset ACCESSPOINT for Asset Inspector.
+ *
+ *  Purpose: 
+ *
+ *
+ */
 
 require_once '../ST_API.php'; // Require ST_API library
+
+SECURITY_ENSURE_AUTHENTICATED();
 
 $assetId = null;
 $property = null;

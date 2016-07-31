@@ -1,5 +1,16 @@
 <?php
 
+/*
+ *      Organization:
+ *        dfreshnet
+ *    Authors:
+ *        Matthew Jones
+ *        Robin Brandt
+ *        Douglas Brandstetter
+ *
+ *    Copyright 2016
+ */
+
 // Define the root to load all subsequent library files from.
 define('__ROOT__', dirname(__FILE__));
 // Define the template root to load all template partials from.
@@ -20,11 +31,6 @@ require_once __ROOT__.'/dataobjects/PostRequest.php';
 require_once __ROOT__.'/dataobjects/PutRequest.php';
 require_once __ROOT__.'/dataobjects/DeleteRequest.php';
 
-//Embedded Objects returned in responses
-require_once __ROOT__.'/dataobjects/Appointment.php';
-require_once __ROOT__.'/dataobjects/Asset.php';
-
-
 /* Executors */
 // Login Class
 require_once __ROOT__.'/executors/Login.php';
@@ -44,7 +50,8 @@ require_once __ROOT__.'/executors/Assets.php';
 require_once __ROOT__.'/executors/TimeClock.php';
 
 /* Control Flow : Take any necessary actions before completing the loading of the library. */
-// Start the session
-if ( session_status() == PHP_SESSION_NONE ) { session_start(); } 
+// Start the session so no pages that require the library need to start the session.
+if ( session_status() == PHP_SESSION_NONE )
+  session_start();
 
 ?>

@@ -26,19 +26,9 @@ require_once './partials/_header.php'; // Require the _header partial.
 
 require_once './partials/_navbar.php'; // Require the _navbar partial.
 
-?>
+require_once './partials/_searchbox.php'; // Require the _searchbox partial.
 
-<div class="container">
-	<div class="well" id="search-box">
-		<input type="search" id="searchBox" value="" class="form-control text-center"
-			placeholder="Filter by any property">
-	</div><!--/#search-box-->
-</div><!--/.container-->
+require_once './partials/_homepage.php'; // Require the _homepage partial.
 
-<div class="container" id="content"></div><!--/#content-->
-
-<div class="modal" id="loading"><p class="loading-message">Loading... Please Wait.</p></div><!--/#loading -->
-
-<?php
-require_once './partials/_footer.php';
+require_once './partials/_footer.php'; // Require the _footer partial.
 ?>

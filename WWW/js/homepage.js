@@ -6,10 +6,14 @@
  * Javascript for the Homepage. 
  * Documentation is currently very sparse as this specific area is under heavy construction.
  *
- *    Authors:
- *             Matthew Jones
- *             Robin Brandt
- *             Douglas Brandstetter
+ *      Organization:
+ * 				dfreshnet
+ * 		Authors:
+ *				Matthew Jones
+ *				Robin Brandt
+ *				Douglas Brandstetter
+ *
+ *		Copyright 2016
  *
  ***********/
 

@@ -11,10 +11,6 @@
  *
  ***********/
 
-if ( session_status() == PHP_SESSION_NONE ) { session_start(); }
-/*
- *	TODO: Make you log out.
- */
 require_once './php/ST_API.php';
 $Logout = new Logout();
 
