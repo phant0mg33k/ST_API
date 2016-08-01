@@ -35,68 +35,52 @@ function buildAlertCB( alertType, alertMsg, dismissable )
 	return alert_div;
 }
 
-function markAssetInactiveButton( event )
+function clickHandler( button )
 {
-	var this_button = $(this);
-	var ASSET_ID = this_button.attr('asset-id');
+	return {
+		button: button,
+		ASSET_ID: button.attr('asset-id'),
+		DATA_TARGET: button.attr('data-target'),
+		COMPLETE_TEXT: button.attr('data-alt-text'),
+		REQ_URL: "/php/accesspoints/asset.php"
+	};
+}
 
-	var params = "assetId="+ASSET_ID+"&status=inactive";	
-	var REQ_URL = "/php/accesspoints/asset.php";
-
-	$.post(REQ_URL, params, function( data, textStatus, jqXHR ) {
+function sendRequest( params, REQ_OBJ )
+{
+	$.post(REQ_OBJ['REQ_URL'], params, function( data, textStatus, jqXHR ) {
 		data = $.parseJSON(data);
 		if ( data['alert'] )
 		{
 			$('#content').prepend( buildAlertCB('success', data['alert'], true ));
-			this_button.addClass('btn-success').removeClass('btn-danger').text('Inactive');
+			REQ_OBJ['button'].addClass('btn-success').removeClass('btn-danger').text( REQ_OBJ['COMPLETE_TEXT'] );
+			return true;
 		} else {
-			alert( data['error'] );
+			$('#content').prepend( buildAlertCB('error', data['error'], true ));
+			return false;
 		}
 	});
+}
+
+function markAssetInactiveButton( event )
+{
+	var REQ_OBJ = clickHandler( $(this) );
+	var params = "assetId="+REQ_OBJ['ASSET_ID']+"&status=inactive";
+	sendRequest( params, REQ_OBJ );
 }
 
 function markAssetActiveButton( event )
 {
-	var this_button = $(this);
-	var ASSET_ID = this_button.attr('asset-id');
-
-	var params = "assetId="+ASSET_ID+"&status=active";
-	var REQ_URL = "/php/accesspoints/asset.php";
-
-	$.post(REQ_URL, params, function( data, textStatus, jqXHR ) {
-		data = $.parseJSON(data);
-		if ( data['alert'] )
-		{
-			$('#content').prepend( buildAlertCB('success', data['alert'], true ));
-			this_button.addClass('btn-success').removeClass('btn-danger').text('Active');
-		} else {
-			alert( data['error'] );
-		}
-	});
+	var REQ_OBJ = clickHandler( $(this) );
+	var params = "assetId="+REQ_OBJ['ASSET_ID']+"&status=active";
+	sendRequest( params, REQ_OBJ );
 }
 
 function inspectAssetButton( event )
 {
-	var this_button = $(this);
-	var ASSET_ID = this_button.attr('asset-id');
-
-	// additional params based on the data target of the button that was selected.
-	var DATA_TARGET = $(this).attr('data-target');
-
-	var params = "assetId="+ASSET_ID+"&property="+DATA_TARGET;
-	var REQ_URL = "/php/accesspoints/asset.php";
-
-	$.post(REQ_URL, params, function( data, textStatus, jqXHR )
-	{
-		data = $.parseJSON(data);
-		if ( data['alert'] )
-		{
-			$('#content').prepend( buildAlertCB('success', data['alert'], true ));
-			this_button.addClass('btn-success').removeClass('btn-danger').text('Inspected');
-		} else {
-			alert( data['error'] );
-		}
-	});
+	var REQ_OBJ = clickHandler( $(this) );
+	var params = "assetId="+REQ_OBJ['ASSET_ID']+"&property="+REQ_OBJ['DATA_TARGET'];
+	sendRequest( params, REQ_OBJ );
 }
 
 /* This function accepts the "Asset" and constructs an "asset-list-item" out of it.
@@ -132,9 +116,9 @@ function buildAssetsCB( asset )
 		this_asset.append( $("<p></p>").addClass('asset-list-item-property '+propName+"-class").text( propName+": " + asset['properties'][propName] ) );
 	}
 
-	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'last_insp_date').attr("asset-id", asset['id']).text("Mark Inspected").on('click', inspectAssetButton)) );
-	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'status').attr("asset-id", asset['id']).text("Mark Inactive").on('click', markAssetInactiveButton)) );
-	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'status').attr("asset-id", asset['id']).text("Mark Active").on('click', markAssetActiveButton)) );
+	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'last_insp_date').attr("asset-id", asset['id']).attr('data-alt-text', 'Inspected').text("Mark Inspected").on('click', inspectAssetButton)) );
+	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'status').attr("asset-id", asset['id']).attr('data-alt-text', 'Inactive').text("Mark Inactive").on('click', markAssetInactiveButton)) );
+	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'status').attr("asset-id", asset['id']).attr('data-alt-text', 'Active').text("Mark Active").on('click', markAssetActiveButton)) );
 
 	console.log(asset);
 
