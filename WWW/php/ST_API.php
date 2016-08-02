@@ -1,12 +1,12 @@
 <?php
 
 /*
- *      Organization:
- *        dfreshnet
+ *    Organization:
+ *      dfreshnet
  *    Authors:
- *        Matthew Jones
- *        Robin Brandt
- *        Douglas Brandstetter
+ *      Matthew Jones
+ *      Robin Brandt
+ *      Douglas Brandstetter
  *
  *    Copyright 2016
  */
@@ -23,6 +23,8 @@ require_once __ROOT__.'/funcs.php';
 
 
 /* Data Objects */
+// Base Executor Object
+require_once __ROOT__.'/dataobjects/Executor.php';
 // Base Class used to send POST and GET requests -- ABSTRACT
 require_once __ROOT__.'/dataobjects/HttpRequest.php';
 // Extend HttpRequest.

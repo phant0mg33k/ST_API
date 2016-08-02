@@ -1,14 +1,19 @@
 <?php
+/***********
+ * ServiceTrade API Integration 
+ * 
+ *  Appointments Executor
+ *  UNDER HEAVY DEVELOPMENT
+ *
+ *    Authors:
+ *             Matthew Jones
+ *             Robin Brandt
+ *             Douglas Brandstetter
+ *
+ ***********/
 
-class Appointments
+class Appointments extends Executor
 {
-  public $RESPONSE;
-
-  public function __construct()
-  {
-    $this->RESPONSE = null;
-  }
-
   private function save_response( $RESPONSE )
   {
     if ( !is_null( $RESPONSE ) )
@@ -47,12 +52,11 @@ class Appointments
   }
 
 
-/* ADVANCED MEMBER FUNCTIONS (Utilize other public functions.) */
+/* ADVANCED MEMBER FUNCTIONS (Utilizes other Executors and public member functions.) */
   public function get_all_clocked_in_by_tech_id()
   {
     $TimeClock = new TimeClock();
     $TimeClock->get_open_clock_events();
-
     $RESPONSE = json_decode($TimeClock->RESPONSE, true);
     // Might be more than one clock event. TODO: Need to loop and return more than one appointment. Multiple requests. ( Not Good. )
     if ( empty($RESPONSE) )

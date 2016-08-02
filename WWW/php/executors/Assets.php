@@ -1,14 +1,19 @@
 <?php
+/***********
+ * ServiceTrade API Integration 
+ * 
+ * 	Assets Executor
+ *  UNDER HEAVY DEVELOPMENT
+ *
+ *    Authors:
+ *             Matthew Jones
+ *             Robin Brandt
+ *             Douglas Brandstetter
+ *
+ ***********/
 
-class Assets
+class Assets extends Executor
 {
-	public $RESPONSE;
-
-	public function __construct()
-	{
-		$this->RESPONSE = null;
-	}
-
 	private function save_response( $RESPONSE )
 	{
 		if ( !is_null( $RESPONSE ) )

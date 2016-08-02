@@ -54,4 +54,11 @@ function HANDLE_LOGIN_PAGE()
 
 /* ------ END SECURITY SECTION ------ */
 
+
+/* ------ GENERAL PURPOSE FUNCTIONS ----- */
+function alert_message( $type, $msg )
+{
+  return json_encode( array( $type => $msg ) );
+}
+
 ?>

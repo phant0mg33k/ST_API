@@ -11,84 +11,63 @@
 require_once '../ST_API.php'; // Require ST_API library
 
 SECURITY_ENSURE_AUTHENTICATED();
+/* TODO: Clean this **** Up. */
 
-$assetId = null;
-$property = null;
-$status = null;
 
-if ( $_SERVER['REQUEST_METHOD'] == "POST" ) {
+if ( $_SERVER['REQUEST_METHOD'] === "GET" )
+{
+  if ( !isset($_GET['assetId']) )
+  {
+    echo alert_message( 'error', 'No assetId was supplied.' );
+  } else {
+    $Assets = new Assets();           // New Assets Executor
+    $Assets->get_by_id( $_GET['assetId'] );       // Get the Asset by it's ID.
+    echo alert_message( 'asset', $Assets->RESPONSE );    // Return the Asset JSON_encoded.
+  }
+} elseif ( $_SERVER['REQUEST_METHOD'] === "POST" ) {
 // We are trying to make modifications.
-	extract( $_POST, EXTR_IF_EXISTS ); // Expand POST array into assetId
-
-	if ( isset($assetId) && !is_null($assetId) )
-	{
-/* TODO: Clean this **** Up.
- */
-		if ( isset($property) && !is_null($property) )
-		{
-			$Assets = new Assets();
-
-			if ( $property == "last_insp_date" ) {
-				$didSucceed = $Assets->mark_asset_inspected( $assetId );
-			} else {
-				echo json_encode( array( 'error' => 'Requested update to property that can not currently be updated.') );
-				exit;
-			}
-
-			if ( $didSucceed )
-			{
-				echo json_encode( array('alert'=>"Asset was successfully marked as inspected.\nUpdated: $property") );
-				exit;
-			} else {
-				echo json_encode( array('error'=>'Asset was not successfully marked as inspected.') );
-				exit;
-			}
-		} elseif ( isset($status) && !is_null($status) ) {
-			$Assets = new Assets();
-
-			if ( $status == "inactive" )
-			{
-				// mark status inactive
-				$didSucceed = $Assets->mark_asset_inactive( $assetId );
-			} elseif ( $status == "active" ) {
-				// mark status as active... may need to perform some testing here.
-				$didSucceed = $Assets->mark_asset_active( $assetId );
-			} else {
-				// some error man... status was not "inactive | active"
-				echo json_encode( array( 'error' => "Asset status was not updated. Status supplied was not 'active' or 'inactive'.") );
-				exit;
-			}
-
-			if ( $didSucceed )
-			{
-				echo json_encode( array('alert'=>"Asset was successfully marked as $status.") );
-				exit;
-			} else {
-				echo json_encode( array('error'=>"Asset was not successfully marked as $status.") );
-				exit;	
-			}
-		} else {
-			echo json_encode( array( 'error' => 'Property to inspect was not specified.' ) );
-			exit;
-		}
-	} else {
-		echo json_encode( array('error'=>'No assetId was supplied.') );
-		exit;
-	}
-} elseif ( $_SERVER['REQUEST_METHOD'] == "GET" ) {
-// Going GET Route
-extract( $_GET, EXTR_IF_EXISTS );
-	if ( !isset($assetId) )
-	{
-		// Return error and cease execution.
-		echo json_encode( array( 'error'=>'No assetId was supplied.' ) );
-		exit;
-	} else {
-		$Assets = new Assets();						// New Assets Executor
-		$Assets->get_by_id( $assetId );				// Get the Asset by it's ID.
-		echo json_encode( array( 'asset'=>$Assets->RESPONSE ) );		// Return the Asset JSON_encoded.
-		exit;										// Cease execution.
-	}
+  if ( !isset($_POST['assetId']) || is_null($assetId) )
+  { // Attempted POST with no assetId or null assetId
+    echo alert_message('error', 'Attempted to POST with no assetId specified.');
+  } else {
+    // Attempted POST, assetId is set.
+    if ( isset($_POST['property']) && !is_null($_POST['property']) )
+    {
+      if ( $property === "last_insp_date" ) {
+        $Assets = new Assets();
+        if ( $Assets->mark_asset_inspected($_POST['assetId']) )
+        {
+          echo alert_message('alert', "Asset was successfully marked as inspected.\nUpdated: $property");
+        } else {
+          echo alert_message('error', 'Asset was not successfully marked as inspected.');
+        }
+      } else {
+        echo alert_message('error', 'Requested update to property that can not currently be updated.');
+      }
+    } elseif ( isset($_POST['status']) && !is_null($_POST['status']) ) {
+      if ( $_POST['status'] == "inactive" || $_POST['status'] == "active" )
+      {
+        $Assets = new Assets();
+        // mark status inactive
+        switch ( $_POST['status'] )
+        {
+          case "inactive": $didSucceed = $Assets->mark_asset_inactive($_POST['assetId']); break;
+          case "active" : $didSucceed = $Assets->mark_asset_active($_POST['assetId']); break;
+          default: break;
+        }
+        if ( $didSucceed )
+        {
+          echo alert_message('alert', "Asset was successfully marked as $status.");
+        } else {
+          echo alert_message('error', "Asset was not successfully marked as $status.");
+        }
+      } else {
+        // some error man... status was not "inactive | active"
+        echo alert_message('error', "Asset status was not updated. Status supplied was not 'active' or 'inactive'.");
+      }
+    } else {
+      echo alert_message('error', 'There was no property or status specified.');
+    }
+  }
 }
-
 ?>

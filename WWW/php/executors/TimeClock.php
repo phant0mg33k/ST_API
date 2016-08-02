@@ -1,9 +1,8 @@
 <?php
 /***********
- * ServiceTrade API Integration 
- * 
- * 
- * Abstracts the ServiceTrade AccessPoint for TimeClock events.
+ *  ServiceTrade API Integration 
+ *
+ *  Abstracts the ServiceTrade AccessPoint for TimeClock events.
  *    Currently provides the ability to retrieve a list of all "open" clock events
  *    for the currently logged in user.
  *
@@ -18,15 +17,9 @@
  *
  ***********/
 
-class TimeClock
+class TimeClock extends Executor
 {
-  public $RESPONSE;
-
-  public function __construct()
-  {
-    $this->RESPONSE = null;
-  }
-
+/* Private Member Functions */
   private function save_response( $RESPONSE )
   {
     if ( !is_null( $RESPONSE ) )
@@ -39,7 +32,8 @@ class TimeClock
       return false;
     }
   }
-
+  
+/* Public Member Functions */
   public function get_open_clock_events()
   {
     $REQUEST = new GetRequest( '/clock', array('userId'=>$_SESSION['API_USER_ID'],'openClockEvents'=>1) );
