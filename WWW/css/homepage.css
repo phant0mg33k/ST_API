@@ -51,3 +51,47 @@ body.has-error div#search-box
 	visibility: hidden;
 }
 /*! END CSS for Homepage Modal */
+
+
+/*! BEGIN ASSET BLOCK CSS */
+.asset-list-item
+{
+
+}
+.asset-list-item-property-hidden
+{
+	visibility: hidden;
+	display: none;
+}
+
+.asset-property-list
+{
+	list-style: none;
+	padding: 0px;
+}
+.asset-property-list li
+{
+}
+
+#input_notes
+{
+	resize: none;
+}
+
+@media (min-width: 768px)
+{
+
+	.asset-property-list li
+	{
+		width: 47%;
+		display: inline-block;
+		border-bottom: 1px solid black;
+	}
+	.asset-property-list li:nth-child(2n)
+	{
+		margin-left: 6%;
+	}
+
+}
+
+/*!  END  ASSET BLOCK CSS */

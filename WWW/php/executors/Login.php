@@ -15,6 +15,8 @@ class Login
 			$_SESSION['API_CURRENT_AUTH_TOKEN'] = $response['data']['authToken'];
 			$_SESSION['API_USER_ID'] = $response['data']['user']['id'];
 		} else {
+
+			//$RESPONSE_HEADER = $REQUEST->get_RESPONSE_HEADER();
 			// We failed login. unset these values. (Possibly just regenerate the session.)
 			unset($_SESSION['API_CURRENT_AUTH']);
 			unset($_SESSION['API_CURRENT_AUTH_TOKEN']);

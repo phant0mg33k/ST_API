@@ -83,46 +83,97 @@ function inspectAssetButton( event )
 	sendRequest( params, REQ_OBJ );
 }
 
+function get_date_string( date )
+{
+
+	var dayNames   = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
+	var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+
+	var date_string = "";
+
+	//date_string += dayNames[ date.getDay() ] + ", ";
+	date_string += monthNames[ date.getMonth() ] + " ";
+	date_string += date.getDate() + " ";
+	date_string += date.getFullYear();
+
+	return date_string;
+}
+
 /* This function accepts the "Asset" and constructs an "asset-list-item" out of it.
  *	It will loop through the properties of the asset and include them on the page.
  */
 function buildAssetsCB( asset )
 {
-	var this_asset = $("<div></div>").addClass('well asset-list-item');
-	// JavaScript works in Miliseconds. Unix time is in Seconds.
-	// add additional inspection dates here....
+	console.log(asset);
+
+	var this_asset = $("<div></div>").addClass('panel asset-list-item').addClass( ("active" === asset['status']) ? "panel-success": "panel-danger" );
+
+/* Construct Panel-Heading */
+	var panel_heading = $("<div></div>").addClass("panel-heading");
+		panel_heading.append(
+			$("<h3></h3>").addClass("panel-title").text( "Asset Name: " + asset['name'] ).append( $("<span></span>").addClass("pull-right").text("ID: " + asset['id']) )
+		);
+
+/* Construct Panel-Body */
+	var panel_body = $("<div></div>").addClass("panel-body");
 
 
-	var filtered_properties = [ "" ];
+	var list_group = $("<ul></ul>").addClass("asset-property-list");
+		list_group.append( $("<li></li>").addClass("").text( "Site Location: " + asset['properties']['location_in_site'] ) );
+		list_group.append( $("<li></li>").addClass("").text( "Status: " + asset['status'] ) );
+		list_group.append( $("<li></li>").addClass("").text( "Serial: " + asset['properties']['serial'] ) );
+		list_group.append( $("<li></li>").addClass("").text( "Model: " + asset['properties']['model'] ) );
+		list_group.append( $("<li></li>").addClass("").text( "Manufacturer: " + asset['properties']['manufacturer'] ) );
+		list_group.append( $("<li></li>").addClass("").text( "Size: " + asset['properties']['size'] ) );
+		list_group.append( $("<li></li>").addClass("").text( "Ext Type: " + asset['properties']['extinguisher_type'] ) );
+		list_group.append( $("<li></li>").addClass("").text( "Last Inspected: " + get_date_string( new Date(asset['properties']['last_insp_date']*1000) ) ) );
+
+	panel_body.append( list_group );
+
+	var notes_form = $("<div></div>").addClass("form-group");
+		notes_form.append( $("<textarea></textarea>").attr("id", "input_notes").addClass("form-control").attr("placeholder", "Notes").text( (asset['properties']['notes']) ? asset['properties']['notes'] : "" ) );
+
+	panel_body.append( notes_form );
+
+
+/* Construct Panel-Footer */
+	var panel_footer = $("<div></div>").addClass('panel-footer text-center');
+		panel_footer.append( $("<div></div>").addClass('btn-group btn-group-justified').append( $("<button></button>").addClass("btn btn-lg btn-danger").attr('data-target', 'last_insp_date').attr("asset-id", asset['id']).attr('data-alt-text', 'Inspected').text("Mark Inspected").on('click', inspectAssetButton)) );
+
+	if ( asset['status'] === "active" )
+	{
+		panel_footer.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger").attr('data-target', 'status').attr("asset-id", asset['id']).attr('data-alt-text', 'Inactive').text("Mark Inactive").on('click', markAssetInactiveButton)) );
+	} else {
+		panel_footer.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger").attr('data-target', 'status').attr("asset-id", asset['id']).attr('data-alt-text', 'Active').text("Mark Active").on('click', markAssetActiveButton)) );		
+	}
+	
+
+	// Append the panel sections to the panel => "this_asset"
+	this_asset.append( panel_heading );
+	this_asset.append( panel_body    );
+	this_asset.append( panel_footer  );
+
+
+	// This appends the properties and other searchable asset attributes to the asset-list-item.
 	var date_properties = [ "last_insp_date", "last_6_year_test_date", "last_12_year_test_date", "manufacture_date", "6_year_test_date", "12_year_test_date" ];
-
-	// Pull
-	this_asset.append( $("<p></p>").text( "Asset Name: " + asset['name'] ) );
-	this_asset.append( $("<p></p>").text( "Asset ID: " + asset['id'] ) );
-	this_asset.append( $("<p></p>").text( "Asset Status: " + asset['status'] ) );
-
+	this_asset.append( $("<p></p>").addClass("asset-list-item-property-hidden")			.text( asset['name'] ) );
+	this_asset.append( $("<p></p>").addClass("asset-list-item-property-hidden")				.text( asset['id'] ) );
+	this_asset.append( $("<p></p>").addClass("asset-list-item-property-hidden")		.text( asset['status'] ) );
 	for ( var propName in asset['properties'] )
 	{
-		if ( filtered_properties.includes( propName ) )
-		{ // skipping values we do not want to display
-			continue;
-		} else if ( date_properties.includes( propName ) ) {
+		if ( date_properties.includes( propName ) )
+		{
 			// We are displaying a date.
 			var temp_date = new Date( asset['properties'][propName] * 1000);
-			this_asset.append( $("<p></p>").addClass('asset-list-item-property date-time').text( propName+": " + temp_date.toUTCString() ) );
+			this_asset.append( $("<p></p>").addClass('asset-list-item-property-hidden').text( propName+": " + get_date_string(temp_date) ) );
 			continue;
 		}
 		// append the PropertyName: PropteryValue to the asset-list-item
-		this_asset.append( $("<p></p>").addClass('asset-list-item-property '+propName+"-class").text( propName+": " + asset['properties'][propName] ) );
+		this_asset.append( $("<p></p>").addClass('asset-list-item-property-hidden').text( propName+": " + asset['properties'][propName] ) );
 	}
 
-	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'last_insp_date').attr("asset-id", asset['id']).attr('data-alt-text', 'Inspected').text("Mark Inspected").on('click', inspectAssetButton)) );
-	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'status').attr("asset-id", asset['id']).attr('data-alt-text', 'Inactive').text("Mark Inactive").on('click', markAssetInactiveButton)) );
-	this_asset.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger inspect-asset-btn").attr('data-target', 'status').attr("asset-id", asset['id']).attr('data-alt-text', 'Active').text("Mark Active").on('click', markAssetActiveButton)) );
 
-	console.log(asset);
-
-	return this_asset;
+	return $("<div></div>").addClass("col-xs-12 col-md-6").append( this_asset );
 }
 
 
@@ -158,7 +209,7 @@ $(document).ready(function(){
 				*
 				*/
 
-				var asset_list = $("<div></div>").attr('id', 'asset_list');
+				var asset_list = $("<div></div>").attr('id', 'asset_list').addClass("row");
 
 				data[0]['serviceRequests'][0]['ASSETS'].forEach(function(item, num){
 					asset_list.append( buildAssetsCB( item ) );

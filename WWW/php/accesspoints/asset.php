@@ -26,20 +26,28 @@ if ( $_SERVER['REQUEST_METHOD'] === "GET" )
   }
 } elseif ( $_SERVER['REQUEST_METHOD'] === "POST" ) {
 // We are trying to make modifications.
-  if ( !isset($_POST['assetId']) || is_null($assetId) )
+  if ( !isset($_POST['assetId']) || is_null($_POST['assetId']) )
   { // Attempted POST with no assetId or null assetId
     echo alert_message('error', 'Attempted to POST with no assetId specified.');
   } else {
     // Attempted POST, assetId is set.
     if ( isset($_POST['property']) && !is_null($_POST['property']) )
     {
-      if ( $property === "last_insp_date" ) {
+      if ( $_POST['property'] === 'last_insp_date' ) {
         $Assets = new Assets();
         if ( $Assets->mark_asset_inspected($_POST['assetId']) )
         {
-          echo alert_message('alert', "Asset was successfully marked as inspected.\nUpdated: $property");
+          echo alert_message('alert', "Asset was successfully marked as inspected.\nUpdated: {$_POST['property']}");
         } else {
           echo alert_message('error', 'Asset was not successfully marked as inspected.');
+        }
+      } elseif ( $_POST['property'] === 'notes' && isset( $_POST['notes'] ) ) {
+        $Assets = new Assets();
+        if ( $Assets->update_asset_notes( $_POST['assetId'], $_POST['notes'] ) )
+        {
+          echo alert_message('alert', "Asset's notes were updated successfully.");
+        } else {
+          echo alert_message('error', "Asset's notes were not updated.");
         }
       } else {
         echo alert_message('error', 'Requested update to property that can not currently be updated.');
@@ -57,9 +65,9 @@ if ( $_SERVER['REQUEST_METHOD'] === "GET" )
         }
         if ( $didSucceed )
         {
-          echo alert_message('alert', "Asset was successfully marked as $status.");
+          echo alert_message('alert', "Asset was successfully marked as {$_POST['status']}.");
         } else {
-          echo alert_message('error', "Asset was not successfully marked as $status.");
+          echo alert_message('error', "Asset was not successfully marked as {$_POST['status']}.");
         }
       } else {
         // some error man... status was not "inactive | active"

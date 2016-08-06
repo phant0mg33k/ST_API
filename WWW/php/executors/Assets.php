@@ -51,7 +51,7 @@ class Assets extends Executor
 	/*	Start private mutator code
 	*		Used by public mutators
 	*/
-	private function mark_asset( $ASSET_ID, $REQUEST_PARAMS )
+	private function update_asset( $ASSET_ID, $REQUEST_PARAMS )
 	{
 		$Assets = new Assets();
 		$PutRequest = new PutRequest( '/asset/'.$ASSET_ID, $REQUEST_PARAMS );
@@ -70,20 +70,27 @@ class Assets extends Executor
 	*/
 	public function mark_asset_inspected( $ASSET_ID )
 	{
-		$REQUEST_PARAMS = json_encode( array("properties"=>array("last_insp_date"=>time())) );
-		return $this->mark_asset( $ASSET_ID, $REQUEST_PARAMS );
+		$REQUEST_PARAMS = json_encode( array('properties'=>array("last_insp_date"=>time())) );
+		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );
 	}
 
 	public function mark_asset_inactive( $ASSET_ID )
 	{
-		$REQUEST_PARAMS = json_encode( array( "status" => "inactive" ) );
-		return $this->mark_asset( $ASSET_ID, $REQUEST_PARAMS );
+		$REQUEST_PARAMS = json_encode( array( 'status' => 'inactive' ) );
+		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );
 	}
 
 	public function mark_asset_active( $ASSET_ID )
 	{
-		$REQUEST_PARAMS = json_encode( array( "status" => "active" ) );
-		return $this->mark_asset( $ASSET_ID, $REQUEST_PARAMS );	
+		$REQUEST_PARAMS = json_encode( array( 'status' => 'active' ) );
+		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );	
+	}
+
+	public function update_asset_notes( $ASSET_ID, $NOTES )
+	{
+		// Should probably sanitize the notes here.
+		$REQUEST_PARAMS = json_encode( array('properties' => array('notes' => $NOTES)) );
+		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );
 	}
 }
 ?>
