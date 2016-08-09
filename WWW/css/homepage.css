@@ -101,7 +101,7 @@ body.has-error div#search-box
 	border-bottom: 1px solid black;
 }
 
-#input_notes
+textarea[id^="input_notes-"]
 {
 	resize: none;
 }

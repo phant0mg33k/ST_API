@@ -25,6 +25,8 @@ function buildAlertCB( alertType, alertMsg, dismissable )
 		alert_div.addClass("alert-danger").prepend( $("<strong></strong>").text( "Error: ") );
 	} else if ( alertType == "success" ) {
 		alert_div.addClass("alert-success").prepend( $("<strong></strong>").text( "Success: ") );
+	} else {
+		alert_div.addClass("alert-info").prepend( $("<strong></strong>").text( "Success: ") );
 	}
 
 	if ( dismissable )
@@ -53,7 +55,7 @@ function sendRequest( params, REQ_OBJ )
 		if ( data['alert'] )
 		{
 			$('#content').prepend( buildAlertCB('success', data['alert'], true ));
-			REQ_OBJ['button'].addClass('btn-success').removeClass('btn-danger').text( REQ_OBJ['COMPLETE_TEXT'] );
+			REQ_OBJ['button'].addClass('btn-success').removeClass('btn-info').removeClass('btn-danger').text( REQ_OBJ['COMPLETE_TEXT'] );
 			return true;
 		} else {
 			$('#content').prepend( buildAlertCB('error', data['error'], true ));
@@ -80,6 +82,13 @@ function inspectAssetButton( event )
 {
 	var REQ_OBJ = clickHandler( $(this) );
 	var params = "assetId="+REQ_OBJ['ASSET_ID']+"&property="+REQ_OBJ['DATA_TARGET'];
+	sendRequest( params, REQ_OBJ );
+}
+
+function updateNotesButton( event )
+{
+	var REQ_OBJ = clickHandler( $(this) );
+	var params = "assetId="+REQ_OBJ['ASSET_ID']+"&property="+REQ_OBJ['DATA_TARGET']+"&notes="+$('#input_notes-'+REQ_OBJ['ASSET_ID']).val();
 	sendRequest( params, REQ_OBJ );
 }
 
@@ -124,9 +133,9 @@ function buildAssetsCB( asset )
 /* Construct Panel-Body */
 	var panel_body = $("<div></div>").addClass("panel-body");
 
-
 	var list_group = $("<ul></ul>").addClass("asset-property-list");
 		list_group.append( buildPropertyLI("Site Location", asset['properties']['location_in_site']) );
+		list_group.append( buildPropertyLI("Ext Number", ( asset['properties']['ext_number'] != null ) ? asset['properties']['ext_number'] : "N/A" ) );
 		list_group.append( buildPropertyLI("Status", asset['status']) );
 		list_group.append( buildPropertyLI("Serial", asset['properties']['serial']) );
 		list_group.append( buildPropertyLI("Model", asset['properties']['model']) );
@@ -138,9 +147,15 @@ function buildAssetsCB( asset )
 	panel_body.append( list_group );
 
 	var notes_form = $("<div></div>").addClass("form-group");
-		notes_form.append( $("<textarea></textarea>").attr("id", "input_notes").addClass("form-control").attr("placeholder", "Notes").text( (asset['properties']['notes']) ? asset['properties']['notes'] : "" ) );
+		notes_form.append( $("<textarea></textarea>").attr("id", "input_notes-"+asset['id']).addClass("form-control").attr("placeholder", "Notes").text( (asset['properties']['notes']) ? asset['properties']['notes'] : "" ) );
 
 	panel_body.append( notes_form );
+
+	panel_body.append( 
+		$("<div></div>").addClass("form-group").append(
+			$("<button></button>").addClass("btn btn-info btn-block").attr('asset-id', asset['id']).attr('data-target', 'notes').attr('data-alt-text', 'Notes Saved').text('Update Notes').on('click', updateNotesButton)
+		)
+	);
 
 
 /* Construct Panel-Footer */
