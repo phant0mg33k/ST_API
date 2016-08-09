@@ -29,7 +29,7 @@ function buildAlertCB( alertType, alertMsg, dismissable )
 
 	if ( dismissable )
 	{
-		alert_div.append( $("<button></button>").addClass("close").attr('type', 'button').attr('data-dismiss', 'alert').attr('aria-label', 'Close').append( $("<span></span>").text("X") ) );
+		alert_div.prepend( $("<button></button>").addClass("close").attr('type', 'button').attr('data-dismiss', 'alert').attr('aria-label', 'Close').append( $("<span></span>").text("\xD7") ) );
 	}
 
 	return alert_div;
@@ -99,6 +99,13 @@ function get_date_string( date )
 	return date_string;
 }
 
+function buildPropertyLI( LABEL, TEXT )
+{
+  return $("<li></li>").addClass("")
+    .append( $("<span></span>").addClass("asset-property-list-item-label").text( LABEL + ": " ) )
+    .append( $("<span></span>").addClass("asset-property-list-item-text").text( TEXT ) );
+}
+
 /* This function accepts the "Asset" and constructs an "asset-list-item" out of it.
  *	It will loop through the properties of the asset and include them on the page.
  */
@@ -119,14 +126,14 @@ function buildAssetsCB( asset )
 
 
 	var list_group = $("<ul></ul>").addClass("asset-property-list");
-		list_group.append( $("<li></li>").addClass("").text( "Site Location: " + asset['properties']['location_in_site'] ) );
-		list_group.append( $("<li></li>").addClass("").text( "Status: " + asset['status'] ) );
-		list_group.append( $("<li></li>").addClass("").text( "Serial: " + asset['properties']['serial'] ) );
-		list_group.append( $("<li></li>").addClass("").text( "Model: " + asset['properties']['model'] ) );
-		list_group.append( $("<li></li>").addClass("").text( "Manufacturer: " + asset['properties']['manufacturer'] ) );
-		list_group.append( $("<li></li>").addClass("").text( "Size: " + asset['properties']['size'] ) );
-		list_group.append( $("<li></li>").addClass("").text( "Ext Type: " + asset['properties']['extinguisher_type'] ) );
-		list_group.append( $("<li></li>").addClass("").text( "Last Inspected: " + get_date_string( new Date(asset['properties']['last_insp_date']*1000) ) ) );
+		list_group.append( buildPropertyLI("Site Location", asset['properties']['location_in_site']) );
+		list_group.append( buildPropertyLI("Status", asset['status']) );
+		list_group.append( buildPropertyLI("Serial", asset['properties']['serial']) );
+		list_group.append( buildPropertyLI("Model", asset['properties']['model']) );
+		list_group.append( buildPropertyLI("Manufacturer", asset['properties']['manufacturer']) );
+		list_group.append( buildPropertyLI("Size", asset['properties']['size']) );
+		list_group.append( buildPropertyLI("Ext Type", asset['properties']['extinguisher_type']) );
+		list_group.append( buildPropertyLI("Last Inspected", get_date_string( new Date(asset['properties']['last_insp_date']*1000) )) );
 
 	panel_body.append( list_group );
 
@@ -138,15 +145,18 @@ function buildAssetsCB( asset )
 
 /* Construct Panel-Footer */
 	var panel_footer = $("<div></div>").addClass('panel-footer text-center');
-		panel_footer.append( $("<div></div>").addClass('btn-group btn-group-justified').append( $("<button></button>").addClass("btn btn-lg btn-danger").attr('data-target', 'last_insp_date').attr("asset-id", asset['id']).attr('data-alt-text', 'Inspected').text("Mark Inspected").on('click', inspectAssetButton)) );
+
+  var button_panel =  $("<div></div>").addClass('btn-group btn-group-justified');
+    button_panel.append( $("<a></a>").addClass("btn btn-lg btn-danger").attr('data-target', 'last_insp_date').attr("asset-id", asset['id']).attr('data-alt-text', 'Inspected').text("Mark Inspected").on('click', inspectAssetButton) );
 
 	if ( asset['status'] === "active" )
 	{
-		panel_footer.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger").attr('data-target', 'status').attr("asset-id", asset['id']).attr('data-alt-text', 'Inactive').text("Mark Inactive").on('click', markAssetInactiveButton)) );
+		button_panel.append( $("<a></a>").addClass("btn btn-lg btn-danger").attr('data-target', 'status').attr("asset-id", asset['id']).attr('data-alt-text', 'Inactive').text("Mark Inactive").on('click', markAssetInactiveButton) );
 	} else {
-		panel_footer.append( $("<div></div>").addClass('btn-group').append( $("<button></button>").addClass("btn btn-lg btn-danger").attr('data-target', 'status').attr("asset-id", asset['id']).attr('data-alt-text', 'Active').text("Mark Active").on('click', markAssetActiveButton)) );		
+		button_panel.append( $("<a></a>").addClass("btn btn-lg btn-danger").attr('data-target', 'status').attr("asset-id", asset['id']).attr('data-alt-text', 'Active').text("Mark Active").on('click', markAssetActiveButton) );		
 	}
 	
+  panel_footer.append( button_panel );
 
 	// Append the panel sections to the panel => "this_asset"
 	this_asset.append( panel_heading );
