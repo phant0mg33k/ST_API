@@ -207,6 +207,15 @@ var LIST_OF_ASSETS = [];
 
 $(document).ready(function(){
 
+$(document).ready(function() {
+  $(window).keydown(function(event){
+    if(event.keyCode == 13) { // Always ignore the enter key.
+      event.preventDefault();
+      return false;
+    }
+  });
+});
+
 	$.ajax({
 		type: "GET",
 		url: "/php/accesspoints/appointment.php",
