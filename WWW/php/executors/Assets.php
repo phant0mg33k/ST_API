@@ -14,39 +14,20 @@
 
 class Assets extends Executor
 {
-	private function save_response( $RESPONSE )
+	/* Start Accessors */
+	public function get_by_id( $ASSET_ID )
 	{
-		if ( !is_null( $RESPONSE ) )
-		{
-			$RESPONSE = json_decode($RESPONSE, true);
-			$this->RESPONSE = $RESPONSE['data'];
-			return true;
-		} else {
-			return false;
-		}
+		$REQUEST = new GetRequest( "/asset/$ASSET_ID" );
+		$RESPONSE = $REQUEST->get_RESPONSE();
+		return $this->save_response( $RESPONSE['data'] );
+	}
+	public function get_all_by_location_id( $LOCATION_ID, $STATUS='active,inactive', $TYPE='extinguisher' )
+	{
+		$REQUEST = new GetRequest( '/asset', array( 'locationId' => $LOCATION_ID, 'status' => $STATUS , 'type' => $TYPE ) );
+		$RESPONSE = $REQUEST->get_RESPONSE();
+		return $this->save_response( $RESPONSE['data']['assets'] );
 	}
 
-	/* Start Accessor
-	*
-	*/
-	public function get_by_id( $ID, $STATUS='active' )
-	{
-		$REQUEST = new GetRequest( "/asset/$ID" );
-		$RESPONSE = $REQUEST->get_RESPONSE();
-		return $this->save_response( $RESPONSE );
-	}
-	public function get_all_by_type( $TYPE, $STATUS='active' )
-	{
-		$REQUEST = new GetRequest( '/asset', array( 'type' => $TYPE, 'status' => $STATUS ) );
-		$RESPONSE = $REQUEST->get_RESPONSE();
-		return $this->save_response( $RESPONSE );
-	}
-	public function get_all_by_location_id( $LOCATION_ID, $STATUS='active,inactive' )
-	{
-		$REQUEST = new GetRequest( '/asset', array( 'locationId' => $LOCATION_ID, 'status' => $STATUS , 'type' => 'extinguisher' ) );
-		$RESPONSE = $REQUEST->get_RESPONSE();
-		return $this->save_response( $RESPONSE );
-	}
 
 	/*	Start private mutator code
 	*		Used by public mutators
@@ -63,6 +44,7 @@ class Assets extends Executor
 		}
 		return false;
 	}
+
 
 	/*	Start public mutator code
 	*		Provide very specific mutations to the properties of the asset.

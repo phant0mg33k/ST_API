@@ -5,8 +5,6 @@ class DeleteRequest extends HttpRequest
 	public function __construct( $URL, $PARAMS=null )
 	{
 		parent::__construct( $URL, $PARAMS );
-		$this->REQUEST_URL = $URL;
-		$this->REQUEST_PARAMS = $PARAMS;
 		$this->REQUEST_HEADERS = "Cookie: PHPSESSID={$_SESSION['API_CURRENT_AUTH_TOKEN']}\r\n";
 
 		$CONTEXT_OPTIONS = array(
@@ -16,9 +14,13 @@ class DeleteRequest extends HttpRequest
 			)
 		);
 
-		$CONTEXT = stream_context_create($CONTEXT_OPTIONS);
 		
-		$this->RESPONSE = file_get_contents( $GLOBALS['APIBASEURL'].$this->REQUEST_URL, false, $CONTEXT );
+
+
+
+		$CONTEXT = stream_context_create($CONTEXT_OPTIONS);
+		$this->RESPONSE = file_get_contents( $this->REQUEST_URL, false, $CONTEXT );
+		// DELETE appears to have no JSON response. They just send 204 successful delete or 40x failure.
 		
 		if ( isset( $http_response_header ) && is_array( $http_response_header ) )
 		{

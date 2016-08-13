@@ -219,9 +219,6 @@ $(document).ready(function() {
 	$.ajax({
 		type: "GET",
 		url: "/php/accesspoints/appointment.php",
-		beforeSend: function() {
-			$('body').addClass('loading');
-		},
 		complete: function() {
 			$('body').removeClass('loading');
 		},

@@ -14,17 +14,6 @@
 
 class Appointments extends Executor
 {
-  private function save_response( $RESPONSE )
-  {
-    if ( !is_null( $RESPONSE ) )
-    {
-      $this->RESPONSE = $RESPONSE;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
 /* PUBLIC MEMBER FUNCTIONS */
   public function get_all()
   {
@@ -52,12 +41,12 @@ class Appointments extends Executor
   }
 
 
-/* ADVANCED MEMBER FUNCTIONS (Utilizes other Executors and public member functions.) */
+/* ADVANCED MEMBER FUNCTIONS (Utilizes other Executors and public member functions.) HIGH POTENTIAL FOR BUGS */
   public function get_all_clocked_in_by_tech_id()
   {
     $TimeClock = new TimeClock();
     $TimeClock->get_open_clock_events();
-    $RESPONSE = json_decode($TimeClock->RESPONSE, true);
+    $RESPONSE = $TimeClock->get_response();
     // Might be more than one clock event. TODO: Need to loop and return more than one appointment. Multiple requests. ( Not Good. )
     if ( empty($RESPONSE) )
     {

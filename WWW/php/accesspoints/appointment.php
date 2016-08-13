@@ -20,12 +20,12 @@ SECURITY_ENSURE_AUTHENTICATED();
 // Create the Appointments object 
 $Appointments = new Appointments();
 $Appointments->get_all_clocked_in_by_tech_id();
+$APPOINTMENTS = $Appointments->get_response();
 
-$APPOINTMENTS = json_decode( $Appointments->RESPONSE , true);
 if ( isset( $APPOINTMENTS['data'] )  ) {
   $Assets = new Assets();
   $Assets->get_all_by_location_id( $APPOINTMENTS['data']['location']['id'] );
-  $APPOINTMENTS['data']['serviceRequests'][0]['ASSETS'] = $Assets->RESPONSE['assets'];
+  $APPOINTMENTS['data']['serviceRequests'][0]['ASSETS'] = $Assets->get_response();
   $RESPONSE = json_encode( array($APPOINTMENTS['data']) );
 } else {
   $RESPONSE = json_encode( array("error"=>"No appointment was returned from the TimeClock. You must be clocked into an appointment to use this tool.") );

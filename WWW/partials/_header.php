@@ -37,4 +37,4 @@ if ( isset($PAGE['CSS']) && is_array($PAGE['CSS']) )
 <?php endforeach; ?>
 
 </head>
-<body>
+<body class="loading">

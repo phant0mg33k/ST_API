@@ -22,7 +22,7 @@ if ( $_SERVER['REQUEST_METHOD'] === "GET" )
   } else {
     $Assets = new Assets();           // New Assets Executor
     $Assets->get_by_id( $_GET['assetId'] );       // Get the Asset by it's ID.
-    echo alert_message( 'asset', $Assets->RESPONSE );    // Return the Asset JSON_encoded.
+    echo alert_message( 'asset', $Assets->get_response() );    // Return the Asset JSON_encoded.
   }
 } elseif ( $_SERVER['REQUEST_METHOD'] === "POST" ) {
 // We are trying to make modifications.

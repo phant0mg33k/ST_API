@@ -5,9 +5,9 @@ class Login
 	public function __construct( $USERNAME, $PASSWORD )
 	{
 		// New post request to AUTH endpoint.
-		$REQUEST = new PostRequest( '/auth', array( 'username' => $USERNAME, 'password' => $PASSWORD ) );
-		// Convert response to an associative array.
-		$response = json_decode($REQUEST->get_RESPONSE(), true);
+		$REQUEST = new PostRequest( '/auth', array( 'username' => $USERNAME, 'password' => $PASSWORD ), false );
+		$response = $REQUEST->get_RESPONSE();
+		
 		if ( isset($response['data']['authenticated']) && $response['data']['authenticated'] )
 		{
 			// The server responded with a JSON object that contains a "true" value for the "authenticated" key.
