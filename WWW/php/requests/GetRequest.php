@@ -19,7 +19,7 @@ class GetRequest extends HttpRequest
 
 
 		$CONTEXT = stream_context_create($CONTEXT_OPTIONS);
-		$this->RESPONSE = json_decode( file_get_contents( $this->REQUEST_URL, false, $CONTEXT ), true );
+		$this->RESPONSE = json_decode( @file_get_contents( $this->REQUEST_URL, false, $CONTEXT ), true );
 		
 		if ( isset( $http_response_header ) && is_array( $http_response_header ) )
 		{

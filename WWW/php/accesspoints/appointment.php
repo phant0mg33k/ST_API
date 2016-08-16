@@ -17,21 +17,23 @@
 require_once '../ST_API.php';
 SECURITY_ENSURE_AUTHENTICATED();
 
-// Create the Appointments object 
-$Appointments = new Appointments();
-$Appointments->get_all_clocked_in_by_tech_id();
-$APPOINTMENTS = $Appointments->get_response();
-
-if ( isset( $APPOINTMENTS['data'] )  ) {
-  $Assets = new Assets();
-  $Assets->get_all_by_location_id( $APPOINTMENTS['data']['location']['id'] );
-  $APPOINTMENTS['data']['serviceRequests'][0]['ASSETS'] = $Assets->get_response();
-  $RESPONSE = json_encode( array($APPOINTMENTS['data']) );
+if ( $_SERVER['REQUEST_METHOD'] != "GET" )
+{
+  send_alert_message( "error", "This accesspoint only supports GET method." );
 } else {
-  $RESPONSE = json_encode( array("error"=>"No appointment was returned from the TimeClock. You must be clocked into an appointment to use this tool.") );
+  // Create the Appointments object 
+  $Appointments = new Appointments();
+  $Appointments->get_all_clocked_in_by_tech_id();
+  $APPOINTMENTS = $Appointments->get_response();
+
+  if ( isset( $APPOINTMENTS['data'] )  ) {
+    $Assets = new Assets();
+    $Assets->get_all_by_location_id( $APPOINTMENTS['data']['location']['id'] );
+    $APPOINTMENTS['data']['serviceRequests'][0]['ASSETS'] = $Assets->get_response();
+    send_json_response( array($APPOINTMENTS['data']) );
+  } else {
+    send_alert_message( "error", "No appointment was returned from the TimeClock. You must be clocked into an appointment to use this tool." );
+  }
 }
 
-// If we got to this point there was no appointment.
-echo $RESPONSE;
-exit; // EXECUTION MAY END HERE IF NO APPOINTMENT IS CLOCKED IN.
 ?>

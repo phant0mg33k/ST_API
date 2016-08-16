@@ -19,8 +19,7 @@ HANDLE_LOGIN_PAGE();
 
 // Page Display Variables.
 $PAGE['TITLE'] = 'Login'; // Page Title
-$PAGE['CSS'] = array('bootstrap', 'signin');
-$PAGE['JS'] = array('jquery', 'bootstrap');
+$PAGE['CSS'] = array('signin');
 
 require_once './partials/_header.php';
 

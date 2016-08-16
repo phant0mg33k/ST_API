@@ -120,8 +120,6 @@ function buildPropertyLI( LABEL, TEXT )
  */
 function buildAssetsCB( asset )
 {
-	console.log(asset);
-
 	var this_asset = $("<div></div>").addClass('panel asset-list-item').addClass( ("active" === asset['status']) ? "panel-success": "panel-danger" );
 
 /* Construct Panel-Heading */
@@ -203,24 +201,30 @@ function buildAssetsCB( asset )
 
 
 /* Begin Control Flow */
-var LIST_OF_ASSETS = [];
+var LIST_OF_ASSETS = [];  // Global Variable which makes available the list of assets to the console for debugging purposes.
 
 $(document).ready(function(){
 
-$(document).ready(function() {
-  $(window).keydown(function(event){
-    if(event.keyCode == 13) { // Always ignore the enter key.
-      event.preventDefault();
-      return false;
-    }
-  });
-});
+	var body = $('body'); // One call to jQuery for body object. One instance.
 
+	// Prevent Enter Key from submitting the navbar form causing a page reload.
+	$('.navbar-form').on('keydown', function( event ) {
+		if ( event.keyCode == 13)
+		{
+			event.preventDefault();
+			return false;
+		}
+	});
+
+	// Add the loading class to the body which will hide it and show the loading screen.
+	body.addClass('loading');
+
+	// Perform the first Ajax to get the list of assets.
 	$.ajax({
 		type: "GET",
 		url: "/php/accesspoints/appointment.php",
 		complete: function() {
-			$('body').removeClass('loading');
+			body.removeClass('loading');
 		},
 		success: function( data, textStatus, jqXHR ) {
 
@@ -232,13 +236,9 @@ $(document).ready(function() {
 			if ( data['error'] )
 			{
 				content_div.append( buildAlertCB( 'error', data['error'], false ) );
-				$('body').addClass('has-error');
+				$('#searchBox_Form').hide();
+				body.addClass('has-error');
 			} else {
-
-				/*	TODO: Parse JSON from backend and display Appointment Information
-				*			Display list of filterable assets.
-				*
-				*/
 
 				var asset_list = $("<div></div>").attr('id', 'asset_list').addClass("row");
 

@@ -4,15 +4,14 @@
  * 
  * 
  * Template Partial for the Top of the site
- * Provides basic structure for building out additional pages.
+ *  Provides basic structure for building out additional pages.
  *
  *    Authors:
  *             Matthew Jones
  *             Robin Brandt
- *             Douglass Brandstetter
+ *             Douglas Brandstetter
  *
  ***********/
-
 ?>
 
 <!DOCTYPE html>
@@ -27,14 +26,13 @@
 
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 
+  <link rel="stylesheet" href="/css/bootstrap.css">
 <?php
 /* Stylesheet inclusion.
- * Expects an array of strings which it assumes to be names of .css files inside the /css/ folder.
- */
+ * Expects an array of strings which it assumes to be names of .css files inside the /css/ folder. */
 if ( isset($PAGE['CSS']) && is_array($PAGE['CSS']) )
-  foreach ( $PAGE['CSS'] as $CSS_FILE ) : ?>
-  <link rel="stylesheet" href="/css/<?php echo $CSS_FILE; ?>.css">
-<?php endforeach; ?>
+  echo make_css_links( $PAGE['CSS'] );
+?>
 
 </head>
-<body class="loading">
+<body>

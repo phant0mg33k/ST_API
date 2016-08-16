@@ -56,9 +56,33 @@ function HANDLE_LOGIN_PAGE()
 
 
 /* ------ GENERAL PURPOSE FUNCTIONS ----- */
-function alert_message( $type, $msg )
+function send_json_response( $RESPONSE )
 {
-  return json_encode( array( $type => $msg ) );
+  echo json_encode( $RESPONSE );
+}
+
+function send_alert_message( $type, $msg )
+{
+  send_json_response( array( $type => $msg ) );
+}
+
+
+/* ------ TEMPLATE FUNCTIONS ------ */
+function make_css_links( $CSS_ARRAY )
+{
+  $retVal = "";
+  foreach ( $CSS_ARRAY as $CSS )
+    $retVal .= '  <link rel="stylesheet" href="/css/'.$CSS.'.css">'."\n";
+
+  return $retVal;
+}
+
+function make_js_links( $JS_ARRAY )
+{
+  $retVal = "";
+  foreach ( $JS_ARRAY as $JS )
+    $retVal .= '  <script src="/js/'.$JS.'.js"></script>'."\n";
+  return $retVal;
 }
 
 ?>

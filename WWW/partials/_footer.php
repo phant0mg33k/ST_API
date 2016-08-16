@@ -4,19 +4,22 @@
  * 
  * 
  * Template Partial for the Bottom of the site
- * Provides basic structure for building out additional pages.
+ *  Provides basic structure for building out additional pages.
  *
  *    Authors:
  *             Matthew Jones
  *             Robin Brandt
- *             Douglass Brandstetter
+ *             Douglas Brandstetter
  *
  ***********/
+?>
 
-// Include each string in the array $PAGE['JS'] as a <script> resources.
-if ( isset($PAGE['JS']) && is_array($PAGE['JS']) ) foreach ( $PAGE['JS'] as $JS ) : ?>
-  <script src='/js/<?php echo $JS; ?>.js'></script>
-<?php endforeach; ?>
+
+  <script src="/js/jquery.js"></script>
+  <script src="/js/bootstrap.js"></script>
+<?php if ( isset($PAGE['JS']) && is_array($PAGE['JS']) )
+  echo make_js_links( $PAGE['JS'] );
+?>
 
 </body>
 </html>
