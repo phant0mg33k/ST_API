@@ -26,6 +26,13 @@ class TimeClock extends Executor
     $RESPONSE = $REQUEST->get_RESPONSE();
     return $this->save_response( $RESPONSE['data']['events'] );
   }
+
+  public function perform_clock_in( $APPOINMENT_ID )
+  {
+    $REQUEST = new PostRequest( '/clock', array( 'appointmentId' => $APPOINMENT_ID ) );
+    $RESPONSE = $REQUEST->get_RESPONSE();
+    return $this->save_response( $RESPONSE['data']['events'] );
+  }
 }
 
 ?>

@@ -99,10 +99,38 @@ body.has-error div#search-box
 }
 
 
-.navbar-default .navbar-collapse,
+/* NAVBAR and NAVBAR-FORM */
+.navbar-header
+{
+  display: flex !important;
+  width: 100%;
+  margin: 0 !important;
+}
+.navbar-nav
+{
+  flex-grow: 0;
+  padding: 0;
+  margin: 0;
+}
 .navbar-form
 {
+  flex-grow: 1;
 	border: 0;
+  margin: 0;
+  padding: 9px 0px;
+}
+.navbar-form>.form-group
+{
+  margin: 0;
+  display: block;
+}
+.navbar-form .form-control
+{
+  width: 100%;
+}
+.navbar-nav > li > a
+{
+  padding: 15px;
 }
 @media (min-width: 768px)
 {
@@ -113,15 +141,12 @@ body.has-error div#search-box
 
 /*! BEGIN ASSET BLOCK CSS */
 .asset-list-item
-{
-
-}
+{  }
 .asset-list-item-property-hidden
 {
 	visibility: hidden;
 	display: none;
 }
-
 .asset-property-list
 {
 	list-style: none;
@@ -148,6 +173,14 @@ body.has-error div#search-box
 	border-bottom: 1px solid black;
 }
 
+.form-group:last-of-type
+{
+  margin-bottom: 0;
+}
+
+.panel-footer>.btn-group { margin-right: 10px; }
+.panel-footer>.btn-group:last-of-type { margin-right: 0px; }
+
 textarea[id^="input_notes-"]
 {
 	resize: none;
@@ -157,3 +190,24 @@ textarea[id^="input_notes-"]
 {
 }
 /*!  END  ASSET BLOCK CSS */
+
+
+/*! BEGIN ASSET PANEL OVERRIDES CSS */
+.panel-out6yr
+{
+  border-color: rgb( 255, 127, 0 );
+}
+.panel-out6yr>.panel-heading
+{
+  background-color: rgb( 255, 127, 0 );
+  color: rgb( 127, 64, 0 );
+}
+.panel-out6yr>.panel-body
+{
+
+}
+.panel-out6yr>.panel-footer
+{
+
+}
+/*!  END  ASSET PANEL OVERRIDES CSS */

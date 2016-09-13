@@ -55,6 +55,16 @@ class Assets extends Executor
 		$REQUEST_PARAMS = json_encode( array('properties'=>array("last_insp_date"=>time())) );
 		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );
 	}
+	public function mark_asset_6yr_inspected( $ASSET_ID )
+	{
+		$REQUEST_PARAMS = json_encode( array('properties'=>array("6_year_test_date"=>time())) );
+		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );
+	}
+	public function mark_asset_12yr_inspected( $ASSET_ID )
+	{
+		$REQUEST_PARAMS = json_encode( array('properties'=>array("12_year_test_date"=>time())) );
+		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );
+	}
 
 	public function mark_asset_inactive( $ASSET_ID )
 	{

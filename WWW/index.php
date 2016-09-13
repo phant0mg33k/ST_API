@@ -20,7 +20,7 @@ SECURITY_ENSURE_AUTHENTICATED();
 // Page Display Variables.
 $PAGE['TITLE'] = 'Home Page';
 $PAGE['CSS'] = array('homepage');
-$PAGE['JS'] = array('jquery.searchable-1.0.0.min', 'homepage');
+$PAGE['JS'] = array('homepage');
 
 require_once './partials/_header.php'; // Require the _header partial.
 

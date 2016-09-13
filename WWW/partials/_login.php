@@ -19,6 +19,6 @@
       <h2 class="">Login</h2>
       <input class="form-control" placeholder="Username" type="text" name="username" required autofocus />
       <input class="form-control" placeholder="Password" type="password" name="password" required />
-      <button class="btn btn-lg btn-primary btn-block">Sign In</button>
+      <button class="btn btn-primary btn-block">Sign In</button>
     </form><!--/.form-signin -->
   </div><!--/.container-->
