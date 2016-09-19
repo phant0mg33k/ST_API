@@ -24,7 +24,18 @@
           </div>
         </form><!--/.navbar-form -->
         <ul class="nav navbar-nav navbar-right">
-          <li><a class="btn btn-block" href="/logout.php">Logout</a></li>
+          <li>
+            <a class="btn btn-block" href="/logout.php" data-toggle="tooltip" data-placement="bottom" title="Log Out">
+              <span class="visible-xs"><span class="glyphicon glyphicon-log-out"></span></span>
+              <span class="hidden-xs">Logout</span>
+            </a>
+          </li>
+          <li>
+            <a class="btn btn-block" href="javascript:refreshAssets();" data-toggle="tooltip" data-placement="bottom" title="Reload List">
+              <span class="visible-xs"><span class="glyphicon glyphicon-refresh"></span></span>
+              <span class="hidden-xs">Reload List</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div><!--/.container -->

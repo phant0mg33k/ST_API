@@ -53,13 +53,29 @@ function handle_post_asset_property()
       }
 // end switch case
 
-    } elseif ( $_POST['property'] === 'notes' && isset( $_POST['notes'] ) ) {
-      $Assets = new Assets();
-      if ( $Assets->update_asset_notes( $_POST['assetId'], $_POST['notes'] ) )
-      {
-        send_alert_message('alert', "Asset's notes were updated successfully.");
+    } elseif ( $_POST['property'] === 'notes' ) {
+      if ( isset($_POST['notes']) ) {
+        $Assets = new Assets();
+        if ( $Assets->update_asset_notes( $_POST['assetId'], $_POST['notes'] ) )
+        {
+          send_alert_message('alert', "Asset's notes were updated successfully.");
+        } else {
+          send_alert_message('error', "Asset's notes were not updated.");
+        }
       } else {
-        send_alert_message('error', "Asset's notes were not updated.");
+        send_alert_message('error', "Asset's notes were not specified.");
+      }
+    } elseif ( $_POST['property'] === 'location_in_site' ) {
+      if ( isset($_POST['location_in_site']) ) {
+        $Assets = new Assets();
+        if ( $Assets->update_asset_location_in_site( $_POST['assetId'], $_POST['location_in_site'] ) )
+        {
+          send_alert_message('alert', "Asset's location_in_site was updated successfully.");
+        } else {
+          send_alert_message('error', "Asset's location_in_site was not updated.");
+        }
+      } else {
+        send_alert_message('error', "Asset's location_in_site was not specified.");
       }
     } else {
       send_alert_message('error', 'Requested update to property that can not currently be updated.');
@@ -112,10 +128,23 @@ function handle_post_request()
 
 function handle_get_request()
 {
-  if ( !isset($_GET['assetId']) )
-  {
-    send_alert_message( 'error', 'No assetId was supplied.' );
-  } else {
+  if ( isset($_GET['locationId']) ) {
+    // Return list of assets based on location.
+
+    $Assets = new Assets();
+    $Assets->get_all_by_location_id( $_GET['locationId'] );
+    $RESPONSE_ASSETS = $Assets->get_response();
+    // Check if the asset was found.
+    if ( !is_null($RESPONSE_ASSETS) )
+    {
+      send_json_response( array('assets' => $RESPONSE_ASSETS) );    // Return the Asset JSON_encoded.
+    } else {
+      send_alert_message( 'error', 'Location was not found.' );
+    }
+
+  } elseif ( isset($_GET['assetId']) ) {
+    // Return a single asset
+
     $Assets = new Assets();                   // New Assets Executor
     $Assets->get_by_id( $_GET['assetId'] );   // Get the Asset by it's ID.
     $RESPONSE_ASSET = $Assets->get_response();
@@ -126,6 +155,10 @@ function handle_get_request()
     } else {
       send_alert_message( 'error', 'Asset was not found.' );
     }
+
+  } else {
+    // No assetId or locationId was specified
+    send_alert_message( 'error', 'No assetId or locationId supplied.' );
   }
 }
 

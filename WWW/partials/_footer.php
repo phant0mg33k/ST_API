@@ -17,6 +17,7 @@
 
   <script src="/js/jquery.js"></script>
   <script src="/js/bootstrap.js"></script>
+  <script src="/js/bootstrap-notify.js"></script>
 <?php if ( isset($PAGE['JS']) && is_array($PAGE['JS']) )
   echo make_js_links( $PAGE['JS'] );
 ?>

@@ -1,28 +1,3 @@
-/* Builds a bootstrap alert div.
- * 
- *  You can specify the alert type as either Error (danger), success (sucess), or it will default to info
- *  You can also specify if the alert should contain a close button, (Dismissable)
- */
-function buildAlertCB( alertType, alertMsg, dismissable )
-{
-  var alert_div = $("<div></div>").addClass("alert").attr('role', 'alert').text( alertMsg );
-  if ( alertType == "error" )
-  {
-    alert_div.addClass("alert-danger").prepend( $("<strong></strong>").text( "Error: ") );
-  } else if ( alertType == "success" ) {
-    alert_div.addClass("alert-success").prepend( $("<strong></strong>").text( "Success: ") );
-  } else {
-    alert_div.addClass("alert-info").prepend( $("<strong></strong>").text( "Success: ") );
-  }
-
-  if ( dismissable )
-  {
-    alert_div.prepend( $("<button></button>").addClass("close").attr('type', 'button').attr('data-dismiss', 'alert').attr('aria-label', 'Close').append( $("<span></span>").text("\xD7") ) );
-  }
-
-  return alert_div;
-}
-
 /* Builds a <li> for an asset-property-list-item
  */
 function buildPropertyLI( LABEL, TEXT )
@@ -61,7 +36,15 @@ function buildAssetsCB( asset )
   var panel_body = $("<div></div>").addClass("panel-body");
 
   var list_group = $("<ul></ul>").addClass("asset-property-list");
-    list_group.append( buildPropertyLI("Site Location", asset['properties']['location_in_site']) );
+    var site_location = buildPropertyLI("Site Location", asset['properties']['location_in_site']);
+        site_location.children('.asset-property-list-item-text')
+        .append( 
+          $('<button>').addClass('btn btn-sm btn-default').attr('asset-id', asset['id']).attr('data-target', 'location_in_site' ).on('click', updateSiteLocation)
+          .append( 
+            $('<i>').addClass('glyphicon glyphicon-edit')
+          )
+        );
+    list_group.append( site_location );
     list_group.append( buildPropertyLI("Ext Number", ( asset['properties']['ext_number'] != null ) ? asset['properties']['ext_number'] : "N/A" ) );
     list_group.append( buildPropertyLI("Status", asset['status']) );
     list_group.append( buildPropertyLI("Serial", asset['properties']['serial']) );
@@ -132,13 +115,22 @@ function buildAssetsCB( asset )
     {
       // We are displaying a date.
       var temp_date = new Date( asset['properties'][propName] * 1000);
-      this_asset.append( $("<p></p>").addClass('asset-list-item-property-hidden').text( propName+": " + get_date_string(temp_date) ) );
-      continue;
+      this_asset.append( $("<p></p>").addClass('asset-list-item-property-hidden').attr('data-propname', propName).attr('data-value', asset['properties'][propName]).text( propName+": " + get_date_string(temp_date) ) );
+    } else {
+      // append the PropertyName: PropteryValue to the asset-list-item
+      this_asset.append( $("<p></p>").addClass('asset-list-item-property-hidden').attr('data-propname', propName).attr('data-value', asset['properties'][propName]).text( propName+": " + asset['properties'][propName] ) );
     }
-    // append the PropertyName: PropteryValue to the asset-list-item
-    this_asset.append( $("<p></p>").addClass('asset-list-item-property-hidden').text( propName+": " + asset['properties'][propName] ) );
   }
 
+  var asset_back = $('<div></div>').addClass('asset-list-item-back');
 
-  return $("<div></div>").addClass("col-xs-12 col-md-6").append( this_asset );
+    var edit_site_location = $('<input>').attr('type', 'text').attr('placeholder', 'Location in Site').val( asset['properties']['location_in_site'] );
+
+    asset_back.append( edit_site_location );
+
+  var asset_tag_item = $("<div></div>").addClass("col-xs-12 col-md-6").attr('id', 'asset_'+asset['id']);
+      asset_tag_item.append( asset_back );
+      asset_tag_item.append( this_asset );
+
+  return asset_tag_item;
 }

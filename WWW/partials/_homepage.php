@@ -13,6 +13,7 @@
  *
  ***********/
 ?>
+  <div class="notifications top-right"></div><!--/#alertDisplay-->
 
   <div class="container" id="content"></div><!--/#content-->
 

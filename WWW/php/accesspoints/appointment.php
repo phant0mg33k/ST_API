@@ -8,8 +8,6 @@
  *      Currently this file will require the ST_API library.
  *      It will create an Appointments executor and ask for "All clocked in appointments by the technician's (current logged in users) ID."
  *      It will then extract the JSON into an Associative array. If the Array is NULL it will respond with an error.
- *      If the array contains a location id for the appointment, that ID will be used to retrieve a list of every asset at that location.
- *      They will be appended to the first ServiceRequest and returned in JSON format.
  *
  */
 
@@ -27,9 +25,6 @@ if ( $_SERVER['REQUEST_METHOD'] != "GET" )
   $APPOINTMENTS = $Appointments->get_response();
 
   if ( isset( $APPOINTMENTS['data'] )  ) {
-    $Assets = new Assets();
-    $Assets->get_all_by_location_id( $APPOINTMENTS['data']['location']['id'] );
-    $APPOINTMENTS['data']['serviceRequests'][0]['ASSETS'] = $Assets->get_response();
     send_json_response( array($APPOINTMENTS['data']) );
   } else {
     send_alert_message( "error", "No appointment was returned from the TimeClock. You must be clocked into an appointment to use this tool." );

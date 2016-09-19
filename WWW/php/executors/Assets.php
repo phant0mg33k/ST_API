@@ -57,12 +57,16 @@ class Assets extends Executor
 	}
 	public function mark_asset_6yr_inspected( $ASSET_ID )
 	{
-		$REQUEST_PARAMS = json_encode( array('properties'=>array("6_year_test_date"=>time())) );
+		$time = time();
+		$REQUEST_PARAMS = json_encode( array('properties'=>array("last_insp_date"=>$time, "last_6_year_test_date" =>$time, "6_year_test_date"  => strtotime('+6 years') )) );
 		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );
 	}
 	public function mark_asset_12yr_inspected( $ASSET_ID )
 	{
-		$REQUEST_PARAMS = json_encode( array('properties'=>array("12_year_test_date"=>time())) );
+		$time = time();
+		$time_plus_6 = strtotime('+6 years');
+		$time_plus_12 = strtotime('+12 years');
+		$REQUEST_PARAMS = json_encode( array('properties'=>array("last_insp_date"=> $time, "last_6_year_test_date" =>$time, "6_year_test_date"  => $time_plus_6, "last_12_year_test_date"=> $time, "12_year_test_date" => $time_plus_12 )) );
 		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );
 	}
 
@@ -82,6 +86,13 @@ class Assets extends Executor
 	{
 		// Should probably sanitize the notes here.
 		$REQUEST_PARAMS = json_encode( array('properties' => array('notes' => $NOTES)) );
+		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );
+	}
+
+	public function update_asset_location_in_site( $ASSET_ID, $LOCATION_IN_SITE )
+	{
+		// Should probably sanitize the notes here.
+		$REQUEST_PARAMS = json_encode( array('properties' => array('location_in_site' => $LOCATION_IN_SITE)) );
 		return $this->update_asset( $ASSET_ID, $REQUEST_PARAMS );
 	}
 }

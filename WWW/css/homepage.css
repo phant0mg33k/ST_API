@@ -112,6 +112,10 @@ body.has-error div#search-box
   padding: 0;
   margin: 0;
 }
+.navbar-nav>li
+{
+  float: right;
+}
 .navbar-form
 {
   flex-grow: 1;
@@ -140,8 +144,42 @@ body.has-error div#search-box
 
 
 /*! BEGIN ASSET BLOCK CSS */
+#asset_list>div
+{
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform 0.5s, width 0.5s;
+}
+#asset_list>div.flipped
+{
+  transform: rotateY(180deg);
+}
 .asset-list-item
-{  }
+{
+  z-index: 1;
+  -webkit-backface-visibility: hidden;
+     -moz-backface-visibility: hidden;
+       -o-backface-visibility: hidden;
+          backface-visibility: hidden;
+
+  position: relative;
+}
+.asset-list-item-back
+{
+  position: absolute;
+  top:    15;
+  left:   15;
+  right:  15;
+  bottom: 15;
+  -webkit-transform: rotateY(180deg);
+     -moz-transform: rotateY(180deg);
+       -o-transform: rotateY(180deg);
+          transform: rotateY(180deg);
+  -webkit-backface-visibility: hidden;
+     -moz-backface-visibility: hidden;
+       -o-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
 .asset-list-item-property-hidden
 {
 	visibility: hidden;
@@ -178,7 +216,7 @@ body.has-error div#search-box
   margin-bottom: 0;
 }
 
-.panel-footer>.btn-group { margin-right: 10px; }
+.panel-footer>.btn-group { margin-right: 10px; position: auto; }
 .panel-footer>.btn-group:last-of-type { margin-right: 0px; }
 
 textarea[id^="input_notes-"]
@@ -211,3 +249,13 @@ textarea[id^="input_notes-"]
 
 }
 /*!  END  ASSET PANEL OVERRIDES CSS */
+
+/* bootstrap-notify styles. */
+.notifications{position:fixed;z-index:9999}
+/* Positioning */
+.notifications.top-left{left:10px;top:25px}
+.notifications.top-right{right:10px;top:25px}
+.notifications.bottom-left{left:10px;bottom:25px}
+.notifications.bottom-right{right:10px;bottom:25px}
+/* Notification Element */
+.notifications>div{position:relative;margin:5px 0px}
